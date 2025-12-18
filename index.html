@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eftal & M. Fatih Davetiye</title>
+    <style>
+        :root {
+            --cream: #f9f6f1;
+            --gold: #b08d57;
+            --text: #4a4a4a;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ebebeb; /* Dış arka plan */
+            font-family: 'Times New Roman', serif;
+            overflow: hidden;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 350px;
+            height: 250px;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        /* Zarfın dış görünümü */
+        .envelope {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #f3e5ab;
+            border-radius: 2px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-left: 175px solid transparent;
+            border-right: 175px solid transparent;
+            border-top: 130px solid #d4c391;
+            transform-origin: top;
+            transition: transform 0.8s ease;
+            z-index: 4;
+        }
+
+        /* Davetiye Kartı - Gönderdiğin resimdeki stil */
+        .card {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            width: 330px;
+            height: 230px;
+            background: var(--cream);
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            transition: transform 1s ease-in-out;
+            z-index: 1;
+            border: 1px solid #e0dcd5;
+            /* Köşelerdeki çiçek desenleri için sembolik ekleme */
+            background-image: url('https://www.transparenttextures.com/patterns/floral-paper.png');
+        }
+
+        .card img {
+            width: 140px; /* Gelin-damat çizimi */
+            margin-bottom: 10px;
+        }
+
+        .card h2 {
+            font-size: 28px;
+            color: #333;
+            margin: 10px 0;
+            font-weight: normal;
+        }
+
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+            background: rgba(255,255,255,0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .timer-item span {
+            display: block;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .timer-item { font-size: 10px; color: #777; }
+
+        /* AÇILMA ANİMASYONU */
+        .envelope-wrapper.open .flap {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .envelope-wrapper.open .card {
+            transform: translateY(-220px);
+            z-index: 5;
+            height: 480px; /* Açılınca uzayan kart */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="envelope-wrapper" onclick="this.classList.toggle('open')">
+        <div class="flap"></div>
+        <div class="envelope"></div>
+        <div class="card">
+            <img src="https://img.icons8.com/bubbles/200/wedding-day.png" alt="Eftal & Fatih">
+            
+            <h2>Eftal & M. Fatih</h2>
+            
+            <div class="timer">
+                <div class="timer-item"><span id="days">00</span>GÜN</div>
+                <div class="timer-item"><span id="hours">00</span>SAAT</div>
+                <div class="timer-item"><span id="min">00</span>DAK.</div>
+                <div class="timer-item"><span id="sec">00</span>SN.</div>
+            </div>
+
+            <div class="info-text">
+                <p><strong>11 Ocak 2026</strong><br>Pazar | Saat: 19:00</p>
+                <p>📍 Haliliye / Şanlıurfa</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateTimer() {
+            const wedding = new Date("Jan 11, 2026 19:00:00").getTime();
+            const now = new Date().getTime();
+            const diff = wedding - now;
+
+            document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById("min").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById("sec").innerText = Math.floor((diff % (1000 * 60)) / 1000);
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
+</body>
+</html>
