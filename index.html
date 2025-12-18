@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eftal & M. Fatih Davetiye</title>
+    <style>
+        :root {
+            --cream: #fdfaf5;
+            --gold: #b08d57;
+            --dark: #1a1a1a;
+            --text: #4a4a4a;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #d1d1d1; 
+            font-family: 'Times New Roman', serif;
+            overflow: hidden;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 350px;
+            height: 250px;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        /* Zarfın dış görünümü */
+        .envelope {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #e6dec5;
+            border-radius: 2px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-left: 175px solid transparent;
+            border-right: 175px solid transparent;
+            border-top: 140px solid #c5b68a;
+            transform-origin: top;
+            transition: transform 0.8s ease;
+            z-index: 4;
+        }
+
+        /* Davetiye Kartı */
+        .card {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            width: 340px;
+            height: 240px;
+            background: var(--cream);
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            transition: transform 1s ease-in-out, height 1s ease-in-out;
+            z-index: 1;
+            border: 1px solid #e0dcd5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* YÜKLEDİĞİN RESİM BURADA */
+        .card img {
+            width: 220px; /* Resmin görünürlüğü için boyutu ayarladım */
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .card h2 {
+            font-size: 26px;
+            color: var(--dark);
+            margin: 5px 0;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin: 10px 0;
+            padding: 8px;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .timer-item { font-size: 9px; color: #888; text-transform: uppercase; }
+        
+        .timer-item span {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        /* AÇILMA ANİMASYONU */
+        .envelope-wrapper.open .flap {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .envelope-wrapper.open .card {
+            transform: translateY(-240px);
+            z-index: 5;
+            height: 500px; /* Kart açıldığında uzayacak miktar */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        .info-text {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .location-pin {
+            color: var(--gold);
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="envelope-wrapper" onclick="this.classList.toggle('open')">
+        <div class="flap"></div>
+        <div class="envelope"></div>
+        <div class="card">
+            <img src="1000023234.png" alt="Eftal & Fatih">
+            
+            <h2>Eftal & M. Fatih</h2>
+            
+            <div class="timer">
+                <div class="timer-item"><span id="days">00</span>GÜN</div>
+                <div class="timer-item"><span id="hours">00</span>SAAT</div>
+                <div class="timer-item"><span id="min">00</span>DAK.</div>
+                <div class="timer-item"><span id="sec">00</span>SN.</div>
+            </div>
+
+            <div class="info-text">
+                <p>Birlikteliğimizi sonsuzluğa taşıyacağımız bu özel günümüzde sizleri de aramızda görmekten mutluluk duyarız.</p>
+                <p><strong>11 Ocak 2026</strong><br>Pazar | Saat: 19:00</p>
+                <p class="location-pin">📍 Haliliye / Şanlıurfa</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateTimer() {
+            const wedding = new Date("Jan 11, 2026 19:00:00").getTime();
+            const now = new Date().getTime();
+            const diff = wedding - now;
+
+            if (diff > 0) {
+                document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+                document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                document.getElementById("min").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                document.getElementById("sec").innerText = Math.floor((diff % (1000 * 60)) / 1000);
+            }
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
+</body>
+</html>
