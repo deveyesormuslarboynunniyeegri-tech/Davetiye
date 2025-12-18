@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eftal & M. Fatih Davetiye</title>
+    <style>
+        :root {
+            --paper: #fdfaf5;
+            --envelope: #f3e5ab;
+            --gold: #c5a37d;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Arka planı videodaki gibi yumuşak bir krem tonu yaptık */
+            background: #f9f6f1;
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+        }
+
+        /* Köşelere şık çiçek dekorları ekledik */
+        body::before {
+            content: "🌸";
+            position: absolute;
+            top: 20px; right: 20px;
+            font-size: 50px; opacity: 0.3;
+        }
+
+        .envelope-wrapper {
+            position: relative;
+            width: 320px;
+            height: 220px;
+            cursor: pointer;
+            perspective: 1000px;
+        }
+
+        /* Dokulu Zarf Gövdesi */
+        .envelope {
+            position: absolute;
+            width: 100%; height: 100%;
+            background: var(--envelope);
+            border-radius: 4px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        /* Zarfın içindeki çiçekli kaplama (Astar) */
+        .envelope::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/floral-paper.png');
+            opacity: 0.2;
+        }
+
+        .flap {
+            position: absolute;
+            top: 0; width: 0; height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-top: 120px solid #d4c391;
+            transform-origin: top;
+            transition: transform 0.8s ease;
+            z-index: 4;
+        }
+
+        /* Davetiye Kartı */
+        .card {
+            position: absolute;
+            bottom: 5px; left: 10px;
+            width: 300px; height: 200px;
+            background: white;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            transition: transform 1s ease-in-out;
+            z-index: 1;
+            border: 1px solid #f0e6cc;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        }
+
+        /* Gelin Damat Resmi - Garantili Link */
+        .card img {
+            width: 100px;
+            margin-bottom: 10px;
+        }
+
+        .card h2 {
+            font-size: 22px;
+            color: var(--gold);
+            margin: 5px 0;
+            font-style: italic;
+        }
+
+        .timer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+        }
+
+        .timer-item span {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .timer-item { font-size: 9px; color: #999; }
+
+        /* AÇILMA ANİMASYONU */
+        .envelope-wrapper.open .flap {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        .envelope-wrapper.open .card {
+            transform: translateY(-180px);
+            z-index: 5;
+            height: 380px; /* Kart açılınca uzar */
+        }
+
+        /* Alt kısımdaki çiçekler */
+        .footer-flowers {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            background: url('https://www.transparenttextures.com/patterns/gray-floral.png');
+            opacity: 0.1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="envelope-wrapper" onclick="this.classList.toggle('open')">
+        <div class="flap"></div>
+        <div class="envelope"></div>
+        <div class="card">
+            <img src="https://img.icons8.com/bubbles/200/wedding-day.png" alt="Gelin Damat">
+            <p style="font-size: 10px; color: #aaa; margin: 0;">İlk Adımımız</p>
+            <h2>Eftal & M. Fatih</h2>
+            
+            <div class="timer">
+                <div class="timer-item"><span id="days">00</span>GÜN</div>
+                <div class="timer-item"><span id="hours">00</span>SAAT</div>
+                <div class="timer-item"><span id="min">00</span>DAK.</div>
+                <div class="timer-item"><span id="sec">00</span>SN.</div>
+            </div>
+            
+            <p style="font-size: 13px; margin-top: 20px; font-weight: bold; color: #5d4037;">11 OCAK 2026</p>
+            <p style="font-size: 11px; color: #aaa;">Pazar | 19:00 | Şanlıurfa</p>
+        </div>
+    </div>
+
+    <div class="footer-flowers"></div>
+
+    <script>
+        function updateTimer() {
+            const wedding = new Date("Jan 11, 2026 19:00:00").getTime();
+            const now = new Date().getTime();
+            const diff = wedding - now;
+
+            document.getElementById("days").innerText = Math.floor(diff / (1000 * 60 * 60 * 24));
+            document.getElementById("hours").innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            document.getElementById("min").innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            document.getElementById("sec").innerText = Math.floor((diff % (1000 * 60)) / 1000);
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
+</body>
+</html>
