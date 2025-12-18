@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { background: #fdfaf5; display: flex; justify-content: center; padding-top: 50px; font-family: sans-serif; }
+  .envelope { position: relative; width: 300px; height: 200px; background: #e6d5a1; transition: 0.5s; cursor: pointer; }
+  .flap { position: absolute; top: 0; border-left: 150px solid transparent; border-right: 150px solid transparent; 
+          border-top: 100px solid #d4c391; transform-origin: top; transition: 0.5s; z-index: 3; }
+  .letter { position: absolute; bottom: 10px; left: 10px; width: 280px; height: 180px; background: white; 
+            text-align: center; transition: 0.8s; z-index: 1; padding: 10px; box-sizing: border-box; }
+  
+  /* Açılma Animasyonu */
+  .envelope.open .flap { transform: rotateX(180deg); z-index: 0; }
+  .envelope.open .letter { transform: translateY(-130px); z-index: 5; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+</style>
+</head>
+<body>
+
+<div class="envelope" onclick="this.classList.toggle('open')">
+  <div class="flap"></div>
+  <div class="letter">
+    <h3 style="color:#d4a373">Eftal & Fatih</h3>
+    <p style="font-size: 12px;">Düğünümüze Davetlisiniz</p>
+    <p style="font-size: 14px;"><b>11.01.2026</b></p>
+  </div>
+</div>
+
+</body>
+</html>
