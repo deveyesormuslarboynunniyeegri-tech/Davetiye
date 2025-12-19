@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
@@ -10,7 +10,6 @@
         *{margin:0;padding:0;box-sizing:border-box;}
         body{ min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; font-family:"Times New Roman", serif; background:var(--bg1); overflow:hidden; position: relative; }
 
-        /* Arka plan görseli - Yüklediğin çiçekli çerçeve */
         .flower-bg {
             position: absolute;
             top: 0;
@@ -36,7 +35,10 @@
         
         .card{ position:absolute; top:5%; left:5%; width:90%; height:95%; background:white; border:1px solid var(--gold1); border-radius:4px; padding:12px 10px; text-align:center; display:flex; flex-direction:column; justify-content:space-between; align-items:center; transition:transform 1s ease; z-index:2; overflow: hidden;}
         
+        /* İsimler arasındaki boşluk için margin eklendi */
         h2 { font-family: 'Great Vibes', cursive; font-size: 30px; color: var(--gold3); }
+        h2 span { margin: 0 8px; }
+
         .davetiye-foto { width: 75px; height: 75px; object-fit: cover; border-radius: 50%; border: 2px solid var(--gold1); margin: 2px 0; }
         
         .envelope.open .envelope-flap{transform:rotateX(180deg);}
@@ -61,7 +63,6 @@
             z-index: 15;
             cursor: pointer;
         }
-        .maps-btn:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
@@ -72,7 +73,7 @@
         <div class="envelope" id="envelope">
             <div class="envelope-back"></div>
             <div class="card">
-                <h2>Eftal & M. Fatih</h2>
+                <h2>Eftal <span>&</span> M. Fatih</h2>
                 <img src="1000023273.jpg" alt="Foto" class="davetiye-foto">
                 <div class="info">
                     Birlikteliğimizi sonsuzluğa taşıyacağımız bu günde<br>sizleri aramızda görmekten mutluluk duyarız.
