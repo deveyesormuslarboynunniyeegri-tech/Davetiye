@@ -5,76 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>3D Davetiye</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root{ --gold1:#d4af37; --gold2:#f6e27f; --gold3:#b8962e; --bg1:#fbf7f1; --env-main:#cfc6e8; --env-dark:#b7aed9; --env-light:#ebe6f7; }
         *{margin:0;padding:0;box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-        body{ min-height:100vh; display:flex; justify-content:center; align-items:center; background:var(--bg1); overflow:hidden; perspective: 2500px; font-family: serif; touch-action: none; }
+        body{ min-height:100vh; display:flex; justify-content:center; align-items:center; background:var(--bg1); overflow:hidden; perspective: 2000px; font-family: serif; touch-action: none; }
 
-        /* Arka Plan Hareketi */
         .flower-bg {
-            position: absolute; width: 130%; height: 130%; top: -15%; left: -15%;
+            position: absolute; inset:0;
             background-image: url("1000023316.jpg");
             background-size: cover; background-position: center;
             z-index: 1; pointer-events: none;
-            animation: moveBG 25s infinite alternate ease-in-out;
-            will-change: transform;
         }
-        @keyframes moveBG { 0% { transform: scale(1) translate(0,0); } 100% { transform: scale(1.1) translate(-2%,-2%); } }
 
-        .scene { width: 340px; height: 220px; z-index: 10; position: relative; }
-        .envelope { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.1s linear; }
+        .scene { width: 340px; height: 220px; z-index: 10; position: relative; cursor: grab; }
+        .scene:active { cursor: grabbing; }
+        
+        .envelope {
+            width: 100%; height: 100%; position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.1s linear;
+            transform: rotateX(0deg) rotateY(0deg);
+        }
 
-        .env-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
+        .env-face {
+            position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
         .env-front { background: var(--env-main); z-index: 2; }
-        .env-back { transform: rotateY(180deg); background: var(--env-main); transform-style: preserve-3d; }
+        .env-back { transform: rotateY(180deg); background: var(--env-main); }
 
-        .flap { position: absolute; inset: 0; background: var(--env-dark); clip-path: polygon(0 0, 50% 55%, 100% 0); transform-origin: top; z-index: 5; transition: 0.6s ease; }
-        .waist-l { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(0 0, 0 100%, 100% 50%); z-index: 4; }
-        .waist-r { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(100% 0, 0 50%, 100% 100%); z-index: 4; }
+        .flap { 
+            position: absolute; inset: 0; background: var(--env-dark); 
+            clip-path: polygon(0 0, 50% 55%, 100% 0); 
+            transform-origin: top; z-index: 6; transition: 0.6s ease;
+        }
+        .waist-l { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(0 0, 0 100%, 100% 50%); z-index: 3; }
+        .waist-r { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(100% 0, 0 50%, 100 100%); z-index: 3; }
         .waist-b { position: absolute; bottom: 0; width: 100%; height: 52%; background: var(--env-main); z-index: 4; border-radius: 0 0 8px 8px; }
 
         .seal {
-            position: absolute; top: 50%; left: 50%; width: 65px; height: 65px; transform: translate(-50%, -50%);
-            background: radial-gradient(circle, var(--gold2), var(--gold1), var(--gold3)); border-radius: 50%; z-index: 6;
-            display: flex; justify-content: center; align-items: center; color: white; font-size: 24px; cursor: pointer; transition: 0.4s;
+            position: absolute; top: 50%; left: 50%; width: 65px; height: 65px;
+            transform: translate(-50%, -50%); background: radial-gradient(circle, var(--gold2), var(--gold1), var(--gold3));
+            border-radius: 50%; z-index: 7; display: flex; justify-content: center; align-items: center;
+            color: white; font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.4s;
+            cursor: pointer;
         }
 
-        /* Kart ve Yazı Düzenlemeleri */
         .card {
-            position: absolute; top: 5px; left: 5px; right: 5px; bottom: 5px;
-            background: white; border: 1px solid var(--gold1); border-radius: 4px;
-            padding: 20px 10px; text-align: center; z-index: 2;
-            display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+            position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px;
+            background: white; border: 1.5px solid var(--gold1); border-radius: 4px;
+            padding: 12px; text-align: center; z-index: 2;
             transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
-            transform: translateZ(1px);
+            display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+            cursor: pointer;
         }
 
-        /* İsimler Arası Boşluk ve Font Boyutu */
-        h2 { font-family: 'Great Vibes', cursive; font-size: 24px; color: var(--gold3); white-space: nowrap; }
-        h2 span { margin: 0 15px; display: inline-block; } /* & simgesi etrafındaki boşluk */
-
-        .davetiye-foto { width: 65px; height: 65px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold1); }
+        h2 { font-family: 'Great Vibes', cursive; font-size: 28px; color: var(--gold3); }
+        h2 span { margin: 0 8px; }
+        .davetiye-foto { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold1); }
         .info { font-size: 11px; line-height: 1.4; color: #444; }
-        #countdown { font-size: 10px; font-weight: bold; color: var(--gold3); border-top: 1px solid #eee; width: 100%; padding-top: 8px; }
+        #countdown { font-size: 11px; font-weight: bold; color: var(--gold3); border-top: 1px solid #f0f0f0; width: 100%; padding-top: 6px; }
 
-        /* AÇIK DURUM - Kartın En Öne Çıkması */
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
-        .envelope.open .card { 
-            transform: translateY(-170px) translateZ(400px); /* Daha yukarı ve daha öne */
-            z-index: 5000; 
-            box-shadow: 0 40px 80px rgba(0,0,0,0.3); 
-        }
-        .envelope.open .seal { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        .envelope.open .card { transform: translateY(-135px); z-index: 10; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
+        .envelope.open .seal { transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; }
 
         .maps-btn {
-            position: absolute; bottom: -90px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: -80px; left: 50%; transform: translateX(-50%);
             background: linear-gradient(135deg, var(--gold3), var(--gold1));
-            color: white; text-decoration: none; padding: 12px 30px; border-radius: 25px;
+            color: white; text-decoration: none; padding: 12px 35px; border-radius: 25px;
             font-weight: bold; font-size: 14px; opacity: 0; transition: 0.5s ease;
-            z-index: 6000; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+            z-index: 25; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
         }
-        .envelope.open ~ .maps-btn { opacity: 1; bottom: -70px; }
+        .envelope.open ~ .maps-btn { opacity: 1; bottom: -65px; }
     </style>
 </head>
 <body>
@@ -95,14 +99,14 @@
                     <img src="1000023273.jpg" class="davetiye-foto">
                     <div class="info">
                         Mutluluğumuza ortak olmanız dileğiyle.<br>
-                        <strong>11 OCAK 2026 – 19:00</strong><br>
-                        Haliliye / Şanlıurfa
+                        <strong>11 OCAK 2026 – 19:00</strong>
+                        Recep Tayyip Erdoğan Blv. No:164<br>Haliliye / Şanlıurfa
                     </div>
                     <div id="countdown"></div>
                 </div>
             </div>
         </div>
-        <a href="https://maps.google.com/?q=Haliliye,Şanlıurfa" target="_blank" class="maps-btn">KONUMU AÇ</a>
+        <a href="Https://maps.app.goo.gl/yZ4XqhL7UiP3D3u97?g_st=ac" target="_blank" class="maps-btn">KONUMU AÇ</a>
     </div>
 
     <audio id="bgMusic" playsinline webkit-playsinline><source src="stay.mp3" type="audio/mpeg"></audio>
@@ -110,51 +114,105 @@
     <script>
         const envelope = document.getElementById('envelope');
         const seal = document.getElementById('seal');
+        const card = document.getElementById('card');
         const music = document.getElementById('bgMusic');
-        let rotY = 0, rotX = 0, startX = 0, startY = 0, isDragging = false, isOpen = false, audioUnlocked = false;
+        
+        let rotY = 0;
+        let rotX = 0;
+        let startX = 0;
+        let startY = 0;
+        let isDragging = false;
+        let isOpen = false;
+        let audioUnlocked = false;
 
+        // iPhone için "Agresif" Ses Kilidi Açma
         const unlockAudio = () => {
             if (audioUnlocked) return;
-            music.play().then(() => { music.pause(); music.currentTime = 34; audioUnlocked = true; }).catch(() => {});
+            // Müziği kısa süreliğine oynatıp durdurarak ses kanalını aktifleştiririz
+            music.play().then(() => {
+                music.pause();
+                music.currentTime = 34; // İstediğin saniyeden başla
+                audioUnlocked = true;
+                console.log("Ses kilidi iPhone için açıldı.");
+            }).catch(() => {
+                console.log("Kullanıcı etkileşimi bekleniyor.");
+            });
         };
+
+        // Kullanıcı ekrana dokunduğu veya tıkladığı an kilidi aç
         window.addEventListener('touchstart', unlockAudio, { once: true });
         window.addEventListener('mousedown', unlockAudio, { once: true });
 
-        const handleStart = (e) => { if (isOpen) return; isDragging = true; startX = (e.pageX || e.touches[0].pageX); startY = (e.pageY || e.touches[0].pageY); envelope.style.transition = 'none'; };
+        const handleStart = (e) => {
+            if (isOpen) return;
+            isDragging = true;
+            startX = (e.pageX || e.touches[0].pageX);
+            startY = (e.pageY || e.touches[0].pageY);
+            envelope.style.transition = 'none';
+        };
+
         const handleMove = (e) => {
             if (!isDragging) return;
             const x = (e.pageX || e.touches[0].pageX);
             const y = (e.pageY || e.touches[0].pageY);
-            rotY += (x - startX) * 0.5; rotX -= (y - startY) * 0.5;
+            rotY += (x - startX) * 0.5;
+            rotX -= (y - startY) * 0.5;
             envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-            startX = x; startY = y;
+            startX = x;
+            startY = y;
         };
+
         const handleEnd = () => {
-            isDragging = false; envelope.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
-            rotY = Math.round(rotY / 180) * 180; rotX = Math.round(rotX / 360) * 360;
+            isDragging = false;
+            envelope.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
+            rotY = Math.round(rotY / 180) * 180;
+            rotX = Math.round(rotX / 360) * 360;
             envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
         };
 
-        window.addEventListener('mousedown', handleStart); window.addEventListener('mousemove', handleMove); window.addEventListener('mouseup', handleEnd);
-        window.addEventListener('touchstart', handleStart, {passive: false}); window.addEventListener('touchmove', handleMove, {passive: false}); window.addEventListener('touchend', handleEnd);
+        window.addEventListener('mousedown', handleStart);
+        window.addEventListener('mousemove', handleMove);
+        window.addEventListener('mouseup', handleEnd);
+        window.addEventListener('touchstart', handleStart, {passive: false});
+        window.addEventListener('touchmove', handleMove, {passive: false});
+        window.addEventListener('touchend', handleEnd);
 
         seal.addEventListener('click', (e) => {
             e.stopPropagation();
             const currentY = Math.abs(rotY % 360);
             if(!isOpen && (currentY === 180 || currentY === 540)) {
-                envelope.classList.add('open'); isOpen = true; music.play().catch(() => {});
-                setTimeout(() => { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, zIndex: 9999 }); }, 400);
+                envelope.classList.add('open');
+                isOpen = true;
+                music.volume = 0.7;
+                // iPhone için kilit açılmadıysa burada tekrar zorluyoruz
+                const playPromise = music.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        // Eğer hata verirse kullanıcıya mühre tekrar bastırıyoruz
+                        console.log("Tekrar etkileşim gerekiyor.");
+                    });
+                }
             }
         });
 
-        document.getElementById('card').addEventListener('click', (e) => { if(isOpen) { envelope.classList.remove('open'); isOpen = false; music.pause(); } });
+        card.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if(isOpen) {
+                envelope.classList.remove('open');
+                isOpen = false;
+                music.pause();
+            }
+        });
 
         const target = new Date("Jan 11, 2026 19:00:00").getTime();
         setInterval(() => {
             const diff = target - new Date().getTime();
             if (diff < 0) return;
-            const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
-            document.getElementById("countdown").innerHTML = `${d} GÜN ${h} SAAT ${m} DK ${s} SN`;
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            document.getElementById("countdown").innerHTML = `${d} GÜN ${h} SAAT ${m} DAKİKA ${s} SN`;
         }, 1000);
     </script>
 </body>
