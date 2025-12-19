@@ -8,35 +8,23 @@
     <style>
         :root{ --gold1:#d4af37; --gold2:#f6e27f; --gold3:#b8962e; --bg1:#fbf7f1; --bg2:#f1e8dc; --bg3:#e8dbc8; --env-main:#cfc6e8; --env-dark:#b7aed9; --env-light:#ebe6f7; }
         *{margin:0;padding:0;box-sizing:border-box;}
-        
-        body{ 
-            min-height:100vh; 
-            display:flex; 
-            justify-content:center; 
-            align-items:center; 
-            font-family:"Times New Roman", serif; 
-            background:radial-gradient(circle at top,var(--bg1),var(--bg2),var(--bg3)); 
-            overflow:hidden; 
-            position: relative;
-        }
+        body{ min-height:100vh; display:flex; justify-content:center; align-items:center; font-family:"Times New Roman", serif; background:radial-gradient(circle at top,var(--bg1),var(--bg2),var(--bg3)); overflow:hidden; position: relative; }
 
-        /* ARKA PLAN ÇİÇEKLERİ - Referans resmindeki gibi gerçekçi */
-        .flower-footer {
+        /* ARKA PLAN ÇİÇEKLERİ */
+        .flower-bg {
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 250px;
-            background-image: url('https://www.transparentpng.com/download/watercolor-flower/light-orange-flower-watercolor-transparent-background-4Wv2R1.png');
-            background-size: contain;
-            background-position: bottom center;
+            bottom: -20px;
+            width: 110%;
+            height: 280px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 200'%3E%3Cpath fill='%23d4a373' fill-opacity='0.4' d='M0,120 Q150,50 300,120 T600,120 T900,120 L900,200 L0,200 Z'/%3E%3Ccircle fill='%23e9c46a' fill-opacity='0.3' cx='100' cy='150' r='50'/%3E%3Ccircle fill='%23e9c46a' fill-opacity='0.3' cx='700' cy='150' r='60'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
+            background-position: bottom center;
+            background-size: cover;
             z-index: 1;
-            opacity: 0.8;
             pointer-events: none;
         }
 
-        .wrapper{width:360px; position:relative; z-index:10; margin-bottom: 50px;} 
+        .wrapper{width:360px; position:relative; z-index:10; margin-top: -40px;} 
         .envelope{ width:360px; height:230px; position:relative; perspective:1600px; cursor:pointer; filter:drop-shadow(0 30px 45px rgba(0,0,0,0.2)); }
         .envelope-back{position:absolute; inset:0; background:var(--env-main); border-radius:6px; z-index:1;}
         .envelope-bottom{position:absolute; bottom:0; width:100%; height:50%; background:var(--env-main); border-radius:0 0 6px 6px; z-index:3;}
@@ -45,27 +33,40 @@
         .envelope-flap{position:absolute; inset:0; background:linear-gradient(to bottom,var(--env-dark),var(--env-main)); clip-path:polygon(0 0,50% 55%,100% 0); transform-origin:top; transition:transform 1s ease; z-index:6;}
         .seal{position:absolute; top:50%; left:50%; width:70px; height:70px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle at top left,var(--gold2),var(--gold1),var(--gold3)); box-shadow:inset 0 0 8px rgba(255,255,255,0.6),0 10px 18px rgba(0,0,0,0.35); z-index:7; display:flex; justify-content:center; align-items:center; color:white; font-size:24px;}
         
-        /* Kartın Boyut ve İçerik Düzeltmesi */
-        .card{ position:absolute; top:5%; left:5%; width:90%; height:95%; background:white; border:1px solid var(--gold1); border-radius:4px; padding:15px 10px; text-align:center; display:flex; flex-direction:column; justify-content:space-between; align-items:center; transition:transform 1s ease; z-index:2; }
+        .card{ position:absolute; top:5%; left:5%; width:90%; height:95%; background:white; border:1px solid var(--gold1); border-radius:4px; padding:10px; text-align:center; display:flex; flex-direction:column; justify-content:space-between; align-items:center; transition:transform 1s ease; z-index:2; overflow: hidden;}
         
-        h2 { font-family: 'Great Vibes', cursive; font-size: 30px; color: var(--gold3); margin-top: 5px; }
-        .davetiye-foto { width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 2px solid var(--gold1); margin: 2px 0; }
+        h2 { font-family: 'Great Vibes', cursive; font-size: 28px; color: var(--gold3); }
+        .davetiye-foto { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 2px solid var(--gold1); margin: 2px 0; }
         
         .envelope.open .envelope-flap{transform:rotateX(180deg);}
-        /* Kart daha temiz çıksın diye yükseltildi */
-        .envelope.open .card{transform:translateY(-135px); box-shadow:0 28px 45px rgba(0,0,0,0.3); z-index:8;}
+        .envelope.open .card{transform:translateY(-145px); box-shadow:0 28px 45px rgba(0,0,0,0.3); z-index:8;}
         
         .envelope.open .seal{opacity:0; transition:opacity .4s; pointer-events:none;}
+        .info{font-size: 11px; color: #444; line-height: 1.2; width: 100%;}
+        .info strong { font-size: 12px; display: block; margin: 2px 0; color: #000; }
         
-        .info{font-size: 12px; color: #444; line-height: 1.3; width: 100%;}
-        .info strong { font-size: 13px; display: block; margin: 3px 0; color: #000; }
-        
-        #countdown { font-size: 12px; font-weight: bold; color: var(--gold3); border-top: 1px solid #eee; padding-top: 5px; width: 100%; }
+        /* KONUM BUTONU */
+        .maps-btn {
+            display: inline-block;
+            background: linear-gradient(to right, var(--gold3), var(--gold1));
+            color: white;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin: 5px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .maps-btn:active { transform: scale(0.95); }
+
+        #countdown { font-size: 11px; font-weight: bold; color: var(--gold3); padding-top: 5px; border-top: 1px solid #eee; width: 100%; }
     </style>
 </head>
 <body>
 
-    <div class="flower-footer"></div>
+    <div class="flower-bg"></div>
 
     <div class="wrapper">
         <div class="envelope" id="envelope">
@@ -77,6 +78,7 @@
                     Birlikteliğimizi sonsuzluğa taşıyacağımız bu günde<br>sizleri aramızda görmekten mutluluk duyarız.
                     <strong>11 Ocak 2026 – 19:00</strong>
                     <div class="location">Haliliye / Şanlıurfa</div>
+                    <a href="https://www.google.com/maps/search/?api=1&query=Recep+Tayyip+Erdoğan+Blv.+164+63050+Haliliye+Şanlıurfa" target="_blank" class="maps-btn">Konum</a>
                 </div>
                 <div id="countdown"></div>
             </div>
@@ -90,23 +92,29 @@
 <script>
     const envelope = document.getElementById("envelope");
     const music = document.getElementById("bgMusic");
-    envelope.addEventListener("click", () => {
+    
+    // Zarf açıldığında müzik çalar, tıklandığında durur
+    envelope.addEventListener("click", (e) => {
+        // Eğer tıklanan yer konum butonuysa zarfın kapanmasını engelle
+        if (e.target.classList.contains('maps-btn')) return;
+
         envelope.classList.toggle("open");
         if (envelope.classList.contains("open")) {
             music.currentTime = 34; music.volume = 0;
-            music.play().catch(e => console.log(e));
+            music.play().catch(e => console.log("Müzik çalınamadı:", e));
             let vol = 0;
             let fade = setInterval(() => {
                 if (vol < 0.7) { vol += 0.05; music.volume = vol; }
                 else clearInterval(fade);
             }, 100);
-        } else { music.pause(); }
+        } else { 
+            music.pause(); 
+        }
     });
 
     const target = new Date("Jan 11, 2026 19:00:00").getTime();
     function updateCountdown() {
         const diff = target - new Date().getTime();
-        if (diff < 0) { document.getElementById("countdown").innerHTML = "Mutluluklar!"; return; }
         const d = Math.floor(diff / (1000 * 60 * 60 * 24));
         const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -117,4 +125,4 @@
     updateCountdown();
 </script>
 </body>
-</html>
+    </html>
