@@ -11,87 +11,70 @@
         *{margin:0;padding:0;box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
         body{ min-height:100vh; display:flex; justify-content:center; align-items:center; background:var(--bg1); overflow:hidden; perspective: 2500px; font-family: serif; touch-action: none; }
 
-        /* Hareketli Arka Plan - Kesin Çözüm */
+        /* Arka Plan Hareketi */
         .flower-bg {
-            position: absolute; 
-            width: 130%; height: 130%;
-            top: -15%; left: -15%;
+            position: absolute; width: 130%; height: 130%; top: -15%; left: -15%;
             background-image: url("1000023316.jpg");
             background-size: cover; background-position: center;
             z-index: 1; pointer-events: none;
             animation: moveBG 25s infinite alternate ease-in-out;
             will-change: transform;
         }
-        @keyframes moveBG {
-            0% { transform: scale(1) translate(0, 0); }
-            100% { transform: scale(1.1) translate(-2%, -2%); }
-        }
+        @keyframes moveBG { 0% { transform: scale(1) translate(0,0); } 100% { transform: scale(1.1) translate(-2%,-2%); } }
 
         .scene { width: 340px; height: 220px; z-index: 10; position: relative; }
-        
-        .envelope {
-            width: 100%; height: 100%; position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.1s linear;
-        }
+        .envelope { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.1s linear; }
 
-        .env-face {
-            position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        }
-
+        .env-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); }
         .env-front { background: var(--env-main); z-index: 2; }
         .env-back { transform: rotateY(180deg); background: var(--env-main); transform-style: preserve-3d; }
 
-        .flap { 
-            position: absolute; inset: 0; background: var(--env-dark); 
-            clip-path: polygon(0 0, 50% 55%, 100% 0); 
-            transform-origin: top; z-index: 5; transition: 0.6s ease;
-        }
+        .flap { position: absolute; inset: 0; background: var(--env-dark); clip-path: polygon(0 0, 50% 55%, 100% 0); transform-origin: top; z-index: 5; transition: 0.6s ease; }
         .waist-l { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(0 0, 0 100%, 100% 50%); z-index: 4; }
         .waist-r { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(100% 0, 0 50%, 100% 100%); z-index: 4; }
         .waist-b { position: absolute; bottom: 0; width: 100%; height: 52%; background: var(--env-main); z-index: 4; border-radius: 0 0 8px 8px; }
 
         .seal {
-            position: absolute; top: 50%; left: 50%; width: 65px; height: 65px;
-            transform: translate(-50%, -50%); background: radial-gradient(circle, var(--gold2), var(--gold1), var(--gold3));
-            border-radius: 50%; z-index: 6; display: flex; justify-content: center; align-items: center;
-            color: white; font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.4s;
-            cursor: pointer;
+            position: absolute; top: 50%; left: 50%; width: 65px; height: 65px; transform: translate(-50%, -50%);
+            background: radial-gradient(circle, var(--gold2), var(--gold1), var(--gold3)); border-radius: 50%; z-index: 6;
+            display: flex; justify-content: center; align-items: center; color: white; font-size: 24px; cursor: pointer; transition: 0.4s;
         }
 
-        /* Kart Düzenlemesi - translateZ(1px) başlangıç için kritik */
+        /* Kart ve Yazı Düzenlemeleri */
         .card {
             position: absolute; top: 5px; left: 5px; right: 5px; bottom: 5px;
             background: white; border: 1px solid var(--gold1); border-radius: 4px;
-            padding: 15px 10px; text-align: center; 
-            z-index: 2; transform: translateZ(1px);
+            padding: 20px 10px; text-align: center; z-index: 2;
+            display: flex; flex-direction: column; justify-content: space-between; align-items: center;
             transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
-            display: flex; flex-direction: column; justify-content: space-around; align-items: center;
+            transform: translateZ(1px);
         }
 
-        h2 { font-family: 'Great Vibes', cursive; font-size: 26px; color: var(--gold3); }
+        /* İsimler Arası Boşluk ve Font Boyutu */
+        h2 { font-family: 'Great Vibes', cursive; font-size: 24px; color: var(--gold3); white-space: nowrap; }
+        h2 span { margin: 0 15px; display: inline-block; } /* & simgesi etrafındaki boşluk */
+
         .davetiye-foto { width: 65px; height: 65px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold1); }
-        .info { font-size: 11px; line-height: 1.3; color: #444; }
+        .info { font-size: 11px; line-height: 1.4; color: #444; }
         #countdown { font-size: 10px; font-weight: bold; color: var(--gold3); border-top: 1px solid #eee; width: 100%; padding-top: 8px; }
 
-        /* AÇIK DURUM - iPhone Katman Düzeltmesi */
+        /* AÇIK DURUM - Kartın En Öne Çıkması */
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
         .envelope.open .card { 
-            transform: translateY(-160px) translateZ(300px); 
-            z-index: 2000; 
-            box-shadow: 0 30px 60px rgba(0,0,0,0.3); 
+            transform: translateY(-170px) translateZ(400px); /* Daha yukarı ve daha öne */
+            z-index: 5000; 
+            box-shadow: 0 40px 80px rgba(0,0,0,0.3); 
         }
         .envelope.open .seal { transform: translate(-50%, -50%) scale(0); opacity: 0; }
 
         .maps-btn {
-            position: absolute; bottom: -80px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: -90px; left: 50%; transform: translateX(-50%);
             background: linear-gradient(135deg, var(--gold3), var(--gold1));
             color: white; text-decoration: none; padding: 12px 30px; border-radius: 25px;
             font-weight: bold; font-size: 14px; opacity: 0; transition: 0.5s ease;
-            z-index: 3000; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+            z-index: 6000; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
         }
-        .envelope.open ~ .maps-btn { opacity: 1; bottom: -60px; }
+        .envelope.open ~ .maps-btn { opacity: 1; bottom: -70px; }
     </style>
 </head>
 <body>
@@ -108,7 +91,7 @@
                 <div class="waist-b"></div>
                 <div class="seal" id="seal">❤</div>
                 <div class="card" id="card">
-                    <h2>Eftal & M. Fatih</h2>
+                    <h2>Eftal <span>&</span> M. Fatih</h2>
                     <img src="1000023273.jpg" class="davetiye-foto">
                     <div class="info">
                         Mutluluğumuza ortak olmanız dileğiyle.<br>
@@ -119,7 +102,7 @@
                 </div>
             </div>
         </div>
-        <a href="Https://maps.app.goo.gl/yZ4XqhL7UiP3D3u97?g_st=ac" target="_blank" class="maps-btn">KONUMU AÇ</a>
+        <a href="https://maps.google.com/?q=Haliliye,Şanlıurfa" target="_blank" class="maps-btn">KONUMU AÇ</a>
     </div>
 
     <audio id="bgMusic" playsinline webkit-playsinline><source src="stay.mp3" type="audio/mpeg"></audio>
@@ -128,66 +111,43 @@
         const envelope = document.getElementById('envelope');
         const seal = document.getElementById('seal');
         const music = document.getElementById('bgMusic');
-        
         let rotY = 0, rotX = 0, startX = 0, startY = 0, isDragging = false, isOpen = false, audioUnlocked = false;
 
         const unlockAudio = () => {
             if (audioUnlocked) return;
             music.play().then(() => { music.pause(); music.currentTime = 34; audioUnlocked = true; }).catch(() => {});
         };
-
         window.addEventListener('touchstart', unlockAudio, { once: true });
         window.addEventListener('mousedown', unlockAudio, { once: true });
 
-        const handleStart = (e) => {
-            if (isOpen) return;
-            isDragging = true;
-            startX = (e.pageX || e.touches[0].pageX);
-            startY = (e.pageY || e.touches[0].pageY);
-            envelope.style.transition = 'none';
-        };
-
+        const handleStart = (e) => { if (isOpen) return; isDragging = true; startX = (e.pageX || e.touches[0].pageX); startY = (e.pageY || e.touches[0].pageY); envelope.style.transition = 'none'; };
         const handleMove = (e) => {
             if (!isDragging) return;
             const x = (e.pageX || e.touches[0].pageX);
             const y = (e.pageY || e.touches[0].pageY);
-            rotY += (x - startX) * 0.5;
-            rotX -= (y - startY) * 0.5;
+            rotY += (x - startX) * 0.5; rotX -= (y - startY) * 0.5;
             envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
             startX = x; startY = y;
         };
-
         const handleEnd = () => {
-            isDragging = false;
-            envelope.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
-            rotY = Math.round(rotY / 180) * 180;
-            rotX = Math.round(rotX / 360) * 360;
+            isDragging = false; envelope.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
+            rotY = Math.round(rotY / 180) * 180; rotX = Math.round(rotX / 360) * 360;
             envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
         };
 
-        window.addEventListener('mousedown', handleStart);
-        window.addEventListener('mousemove', handleMove);
-        window.addEventListener('mouseup', handleEnd);
-        window.addEventListener('touchstart', handleStart, {passive: false});
-        window.addEventListener('touchmove', handleMove, {passive: false});
-        window.addEventListener('touchend', handleEnd);
+        window.addEventListener('mousedown', handleStart); window.addEventListener('mousemove', handleMove); window.addEventListener('mouseup', handleEnd);
+        window.addEventListener('touchstart', handleStart, {passive: false}); window.addEventListener('touchmove', handleMove, {passive: false}); window.addEventListener('touchend', handleEnd);
 
         seal.addEventListener('click', (e) => {
             e.stopPropagation();
             const currentY = Math.abs(rotY % 360);
             if(!isOpen && (currentY === 180 || currentY === 540)) {
-                envelope.classList.add('open');
-                isOpen = true;
-                music.play().catch(() => {});
-                setTimeout(() => {
-                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, zIndex: 5000 });
-                }, 400);
+                envelope.classList.add('open'); isOpen = true; music.play().catch(() => {});
+                setTimeout(() => { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, zIndex: 9999 }); }, 400);
             }
         });
 
-        document.getElementById('card').addEventListener('click', (e) => {
-            if(isOpen) { envelope.classList.remove('open'); isOpen = false; music.pause(); }
-        });
+        document.getElementById('card').addEventListener('click', (e) => { if(isOpen) { envelope.classList.remove('open'); isOpen = false; music.pause(); } });
 
         const target = new Date("Jan 11, 2026 19:00:00").getTime();
         setInterval(() => {
