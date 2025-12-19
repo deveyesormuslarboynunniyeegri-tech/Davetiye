@@ -19,23 +19,23 @@
         .envelope-flap{position:absolute; inset:0; background:linear-gradient(to bottom,var(--env-dark),var(--env-main)); clip-path:polygon(0 0,50% 55%,100% 0); transform-origin:top; transition:transform 1s ease; z-index:6;}
         .seal{position:absolute; top:50%; left:50%; width:70px; height:70px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle at top left,var(--gold2),var(--gold1),var(--gold3)); box-shadow:inset 0 0 8px rgba(255,255,255,0.6),0 10px 18px rgba(0,0,0,0.35); z-index:7; display:flex; justify-content:center; align-items:center; color:white; font-size:24px;}
         
-        /* Kartın boyutu sabit tutuldu, içerik daraltıldı */
-        .card{ position:absolute; top:6%; left:5%; width:90%; height:90%; background:white; border:1px solid var(--gold1); border-radius:4px; padding:10px; text-align:center; display:flex; flex-direction:column; justify-content:space-between; align-items:center; transition:transform 1s ease; z-index:2; overflow: hidden;}
+        /* Kartın içindeki dikey hizalamayı "space-between" yaparak alanı paylaştırdım */
+        .card{ position:absolute; top:6%; left:5%; width:90%; height:90%; background:white; border:1px solid var(--gold1); border-radius:4px; padding:10px 5px; text-align:center; display:flex; flex-direction:column; justify-content:space-between; align-items:center; transition:transform 1s ease; z-index:2; overflow: hidden; }
         
-        h2 { font-family: 'Great Vibes', cursive; font-size: 28px; color: var(--gold3); margin-top: 5px; }
-        .davetiye-foto { width: 75px; height: 75px; object-fit: cover; border-radius: 50%; border: 2px solid var(--gold1); margin: 2px 0; }
+        h2 { font-family: 'Great Vibes', cursive; font-size: 28px; color: var(--gold3); margin-top: 2px; }
+        .davetiye-foto { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 2px solid var(--gold1); margin: 0; }
         
         .envelope.open .envelope-flap{transform:rotateX(180deg);}
-        /* Kartın yukarı çıkış mesafesi ilk koddaki gibi */
-        .envelope.open .card{transform:translateY(-110px); box-shadow:0 28px 45px rgba(0,0,0,0.3); z-index:8;}
+        /* Kartın yükselme miktarını hafifçe artırdım (110 -> 115) */
+        .envelope.open .card{transform:translateY(-115px); box-shadow:0 28px 45px rgba(0,0,0,0.3); z-index:8;}
         
         .envelope.open .seal{opacity:0; transition:opacity .4s; pointer-events:none;}
         
-        .info{font-size: 11px; color: #444; line-height: 1.3;}
+        .info{font-size: 11px; color: #444; line-height: 1.25; width: 100%;}
         .info strong { font-size: 12px; display: block; margin: 2px 0; }
         
-        /* Geri sayım için temiz alan */
-        #countdown { font-size: 11px; font-weight: bold; color: var(--gold3); background: #fdfaf3; padding: 4px; width: 100%; border-radius: 0 0 4px 4px; border-top: 1px solid #eee; }
+        /* Geri sayımı kartın en altına sabitledim ve rengini belirginleştirdim */
+        #countdown { font-size: 12px; font-weight: bold; color: #b8962e; background: #fffaf0; padding: 5px; width: 100%; border-top: 1px solid #eee; }
     </style>
 </head>
 <body>
