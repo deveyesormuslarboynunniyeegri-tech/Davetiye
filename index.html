@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>İnteraktif Davetiye</title>
+    <title>3D İnteraktif Davetiye</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
         :root{ --gold1:#d4af37; --gold2:#f6e27f; --gold3:#b8962e; --bg1:#fbf7f1; --env-main:#cfc6e8; --env-dark:#b7aed9; --env-light:#ebe6f7; }
         *{margin:0;padding:0;box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-        body{ min-height:100vh; display:flex; justify-content:center; align-items:center; background:var(--bg1); overflow:hidden; perspective: 2500px; font-family: serif; }
+        body{ min-height:100vh; display:flex; justify-content:center; align-items:center; background:var(--bg1); overflow:hidden; perspective: 2000px; font-family: serif; }
 
         .flower-bg {
             position: absolute; inset:0;
@@ -17,7 +17,9 @@
             z-index: 1; pointer-events: none;
         }
 
-        .scene { width: 340px; height: 220px; z-index: 10; position: relative; }
+        /* 360 Derece Sahne */
+        .scene { width: 340px; height: 220px; z-index: 10; position: relative; cursor: grab; }
+        .scene:active { cursor: grabbing; }
         
         .envelope {
             width: 100%; height: 100%; position: relative;
@@ -27,18 +29,20 @@
 
         .env-face {
             position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
+        /* ÖN YÜZ */
         .env-front { background: var(--env-main); z-index: 2; display: flex; justify-content: center; align-items: center; }
-        .env-front::after { content: "↔ Döndür ve Aç"; color: white; font-size: 14px; opacity: 0.7; }
+        .env-front::after { content: "↔ Her Yöne Çevir"; color: white; font-size: 14px; opacity: 0.7; font-family: sans-serif; }
 
+        /* ARKA YÜZ */
         .env-back { transform: rotateY(180deg); background: var(--env-main); }
 
         .flap { 
             position: absolute; inset: 0; background: var(--env-dark); 
             clip-path: polygon(0 0, 50% 55%, 100% 0); 
-            transform-origin: top; z-index: 6; transition: 0.6s ease-in-out;
+            transform-origin: top; z-index: 6; transition: 0.6s ease;
         }
         .waist-l { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(0 0, 0 100%, 100% 50%); z-index: 3; }
         .waist-r { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(100% 0, 0 50%, 100% 100%); z-index: 3; }
@@ -58,27 +62,25 @@
             padding: 12px; text-align: center; z-index: 2;
             transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
             display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+            cursor: pointer;
         }
 
         h2 { font-family: 'Great Vibes', cursive; font-size: 28px; color: var(--gold3); }
-        h2 span { margin: 0 6px; }
+        h2 span { margin: 0 8px; }
         .davetiye-foto { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold1); }
         .info { font-size: 11px; line-height: 1.4; color: #444; }
         #countdown { font-size: 11px; font-weight: bold; color: var(--gold3); border-top: 1px solid #f0f0f0; width: 100%; padding-top: 6px; }
 
-        /* AÇIK-KAPALI DURUMLARI */
+        /* DURUM KONTROLLERİ */
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
-        .envelope.open .card { transform: translateY(-135px); z-index: 10; box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
-        .envelope.open .seal { transform: translate(-50%, -50%) scale(0.5); opacity: 0; pointer-events: none; }
-
-        /* Kart açıkken kapatma butonu veya direkt karta tıklama */
-        .card { cursor: pointer; }
+        .envelope.open .card { transform: translateY(-135px); z-index: 10; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
+        .envelope.open .seal { transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; }
 
         .maps-btn {
             position: absolute; bottom: -80px; left: 50%; transform: translateX(-50%);
             background: linear-gradient(135deg, var(--gold3), var(--gold1));
             color: white; text-decoration: none; padding: 12px 35px; border-radius: 25px;
-            font-weight: bold; font-size: 14px; opacity: 0; transition: 0.6s ease;
+            font-weight: bold; font-size: 14px; opacity: 0; transition: 0.5s ease;
             z-index: 25; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
         }
         .envelope.open ~ .maps-btn { opacity: 1; bottom: -65px; }
@@ -125,46 +127,50 @@
         let isDragging = false;
         let isOpen = false;
 
-        // Döndürme
-        const startDrag = (e) => {
+        // --- 360 DERECE DÖNDÜRME ---
+        const handleStart = (e) => {
             isDragging = true;
-            startX = e.pageX || e.touches[0].pageX;
+            startX = (e.pageX || e.touches[0].pageX);
             envelope.style.transition = 'none';
         };
-        const onDrag = (e) => {
+
+        const handleMove = (e) => {
             if (!isDragging) return;
-            const x = e.pageX || e.touches[0].pageX;
-            const diff = x - startX;
-            rotation += diff * 0.5;
+            const x = (e.pageX || e.touches[0].pageX);
+            const moveX = x - startX;
+            rotation += moveX * 0.6; // Dönüş hızı
             envelope.style.transform = `rotateY(${rotation}deg)`;
             startX = x;
         };
-        const stopDrag = () => {
+
+        const handleEnd = () => {
             isDragging = false;
             envelope.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
-            const normalizedRotation = Math.round(rotation / 180) * 180;
-            rotation = normalizedRotation;
+            
+            // En yakın 180 dereceye sabitle (Tam ön veya tam arka)
+            rotation = Math.round(rotation / 180) * 180;
             envelope.style.transform = `rotateY(${rotation}deg)`;
         };
 
-        window.addEventListener('mousedown', startDrag);
-        window.addEventListener('mousemove', onDrag);
-        window.addEventListener('mouseup', stopDrag);
-        window.addEventListener('touchstart', startDrag);
-        window.addEventListener('touchmove', onDrag);
-        window.addEventListener('touchend', stopDrag);
+        window.addEventListener('mousedown', handleStart);
+        window.addEventListener('mousemove', handleMove);
+        window.addEventListener('mouseup', handleEnd);
+        window.addEventListener('touchstart', handleStart);
+        window.addEventListener('touchmove', handleMove);
+        window.addEventListener('touchend', handleEnd);
 
-        // Açma Fonksiyonu
+        // --- AÇMA / KAPATMA ---
         seal.addEventListener('click', (e) => {
             e.stopPropagation();
-            if(!isOpen) {
+            // Zarf sadece arkası kullanıcıya bakarken açılabilir (180, 540, -180 vb.)
+            if(!isOpen && Math.abs(rotation % 360) === 180) {
                 envelope.classList.add('open');
                 isOpen = true;
-                playMusic();
+                music.currentTime = 34; music.volume = 0.7;
+                music.play();
             }
         });
 
-        // Kapatma Fonksiyonu (Karta tıklandığında)
         card.addEventListener('click', (e) => {
             e.stopPropagation();
             if(isOpen) {
@@ -174,12 +180,7 @@
             }
         });
 
-        function playMusic() {
-            music.currentTime = 34; music.volume = 0.7;
-            music.play();
-        }
-
-        // Sayaç
+        // Geri Sayım
         const target = new Date("Jan 11, 2026 19:00:00").getTime();
         setInterval(() => {
             const diff = target - new Date().getTime();
@@ -192,5 +193,4 @@
         }, 1000);
     </script>
 </body>
-    </html>
- 
+</html>
