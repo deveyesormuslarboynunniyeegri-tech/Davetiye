@@ -1,214 +1,97 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Eftal & M. Fatih Davetiye</title>
-
-<style>
-/* --- STİLLER AYNI, DOKUNMADIM --- */
-:root{
-  --gold1:#d4af37;
-  --gold2:#f6e27f;
-  --gold3:#b8962e;
-  --cream:#fffdf8;
-  --bg1:#fbf7f1;
-  --bg2:#f1e8dc;
-  --bg3:#e8dbc8;
-  --env-main:#cfc6e8;
-  --env-dark:#b7aed9;
-  --env-light:#ebe6f7;
-}
-
-*{margin:0;padding:0;box-sizing:border-box;}
-
-body{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family:"Times New Roman", serif;
-  background:radial-gradient(circle at top,var(--bg1),var(--bg2),var(--bg3));
-  overflow:hidden;
-}
-
-/* (stil devamı – değiştirmedim) */
-.flower{
-  position:fixed;
-  top:50%;
-  width:140px;
-  height:360px;
-  opacity:0.35;
-  transform:translateY(-50%);
-  pointer-events:none;
-  z-index:1;
-}
-.flower.left{left:-20px;}
-.flower.right{right:-20px;transform:translateY(-50%) scaleX(-1);}
-
-.wrapper{width:360px;position:relative;z-index:5;}
-
-.envelope{
-  width:360px;
-  height:230px;
-  position:relative;
-  perspective:1600px;
-  cursor:pointer;
-  filter:drop-shadow(0 30px 45px rgba(0,0,0,0.2));
-}
-
-.envelope-back{
-  position:absolute;
-  inset:0;
-  background:var(--env-main);
-  border-radius:6px;
-  z-index:1;
-}
-
-.envelope-bottom{
-  position:absolute;
-  bottom:0;
-  width:100%;
-  height:50%;
-  background:var(--env-main);
-  border-radius:0 0 6px 6px;
-  z-index:3;
-}
-
-.envelope-left{
-  position:absolute;
-  left:0;
-  width:50%;
-  height:100%;
-  background:var(--env-light);
-  clip-path:polygon(0 0,0 100%,100% 50%);
-  z-index:3;
-}
-
-.envelope-right{
-  position:absolute;
-  right:0;
-  width:50%;
-  height:100%;
-  background:var(--env-light);
-  clip-path:polygon(100% 0,0 50%,100% 100%);
-  z-index:3;
-}
-
-.envelope-flap{
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to bottom,var(--env-dark),var(--env-main));
-  clip-path:polygon(0 0,50% 55%,100% 0);
-  transform-origin:top;
-  transition:transform 1s ease;
-  z-index:6;
-}
-
-.seal{
-  position:absolute;
-  top:50%;
-  left:50%;
-  width:70px;
-  height:70px;
-  transform:translate(-50%,-50%);
-  border-radius:50%;
-  background:radial-gradient(circle at top left,var(--gold2),var(--gold1),var(--gold3));
-  box-shadow:inset 0 0 8px rgba(255,255,255,0.6),0 10px 18px rgba(0,0,0,0.35);
-  z-index:7;
-}
-
-.card{
-  position:absolute;
-  top:6%;
-  left:5%;
-  width:90%;
-  height:90%;
-  background:linear-gradient(135deg,rgba(255,215,120,0.12),rgba(255,255,255,0.95),rgba(255,215,120,0.12));
-  border:1px solid var(--gold1);
-  border-radius:4px;
-  padding:18px;
-  text-align:center;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  transition:transform 1s ease, box-shadow 1s ease;
-  z-index:2;
-}
-
-.envelope.open .envelope-flap{transform:rotateX(180deg);}
-.envelope.open .card{
-  transform:translateY(-55px);
-  box-shadow:0 28px 45px rgba(0,0,0,0.3);
-  z-index:8;
-}
-.envelope.open .seal{opacity:0;transition:opacity .4s;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Eftal & M. Fatih Davetiye</title>
+    <style>
+        :root{
+            --gold1:#d4af37; --gold2:#f6e27f; --gold3:#b8962e;
+            --cream:#fffdf8; --bg1:#fbf7f1; --bg2:#f1e8dc; --bg3:#e8dbc8;
+            --env-main:#cfc6e8; --env-dark:#b7aed9; --env-light:#ebe6f7;
+        }
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{
+            min-height:100vh; display:flex; justify-content:center; align-items:center;
+            font-family:"Times New Roman", serif;
+            background:radial-gradient(circle at top,var(--bg1),var(--bg2),var(--bg3));
+            overflow:hidden;
+        }
+        .wrapper{width:360px;position:relative;z-index:5;}
+        .envelope{
+            width:360px; height:230px; position:relative; perspective:1600px;
+            cursor:pointer; filter:drop-shadow(0 30px 45px rgba(0,0,0,0.2));
+        }
+        .envelope-back{position:absolute; inset:0; background:var(--env-main); border-radius:6px; z-index:1;}
+        .envelope-bottom{position:absolute; bottom:0; width:100%; height:50%; background:var(--env-main); border-radius:0 0 6px 6px; z-index:3;}
+        .envelope-left{position:absolute; left:0; width:50%; height:100%; background:var(--env-light); clip-path:polygon(0 0,0 100%,100% 50%); z-index:3;}
+        .envelope-right{position:absolute; right:0; width:50%; height:100%; background:var(--env-light); clip-path:polygon(100% 0,0 50%,100% 100%); z-index:3;}
+        .envelope-flap{position:absolute; inset:0; background:linear-gradient(to bottom,var(--env-dark),var(--env-main)); clip-path:polygon(0 0,50% 55%,100% 0); transform-origin:top; transition:transform 1s ease; z-index:6;}
+        .seal{position:absolute; top:50%; left:50%; width:70px; height:70px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle at top left,var(--gold2),var(--gold1),var(--gold3)); box-shadow:inset 0 0 8px rgba(255,255,255,0.6),0 10px 18px rgba(0,0,0,0.35); z-index:7; display:flex; justify-content:center; align-items:center; color:white; font-size:24px;}
+        .card{
+            position:absolute; top:6%; left:5%; width:90%; height:90%;
+            background:white; border:1px solid var(--gold1); border-radius:4px;
+            padding:18px; text-align:center; display:flex; flex-direction:column;
+            justify-content:center; align-items:center; transition:transform 1s ease, box-shadow 1s ease; z-index:2;
+        }
+        .envelope.open .envelope-flap{transform:rotateX(180deg);}
+        .envelope.open .card{transform:translateY(-100px); box-shadow:0 28px 45px rgba(0,0,0,0.3); z-index:8;}
+        .envelope.open .seal{opacity:0; transition:opacity .4s; pointer-events:none;}
+        .info{font-size: 14px; color: #444; margin-top: 10px;}
+    </style>
 </head>
-
 <body>
 
 <div class="wrapper">
-  <div class="envelope" id="envelope">
-    <div class="envelope-back"></div>
-
-    <div class="card">
-      <h2>Eftal & M. Fatih</h2>
-      <div class="info">
-        Birlikteliğimizi sonsuzluğa taşıyacağımız bu günde<br>
-        sizleri aramızda görmekten mutluluk duyarız.
-        <br><br>
-        <strong>11 Ocak 2026 – 19:00</strong>
-        <div class="location">Haliliye / Şanlıurfa</div>
-      </div>
+    <div class="envelope" id="envelope">
+        <div class="envelope-back"></div>
+        <div class="card">
+            <h2>Eftal & M. Fatih</h2>
+            <div class="info">
+                Birlikteliğimizi sonsuzluğa taşıyacağımız bu günde<br>
+                sizleri aramızda görmekten mutluluk duyarız.
+                <br><br>
+                <strong>11 Ocak 2026 – 19:00</strong>
+                <div class="location">Haliliye / Şanlıurfa</div>
+            </div>
+        </div>
+        <div class="envelope-left"></div>
+        <div class="envelope-right"></div>
+        <div class="envelope-bottom"></div>
+        <div class="envelope-flap"></div>
+        <div class="seal">❤</div>
     </div>
-
-    <div class="envelope-left"></div>
-    <div class="envelope-right"></div>
-    <div class="envelope-bottom"></div>
-    <div class="envelope-flap"></div>
-    <div class="seal"><span>❤</span></div>
-  </div>
 </div>
 
-<!-- 🎵 MP3 SES -->
 <audio id="bgMusic" preload="auto">
-  <source src="stay.mp3" type="audio/mpeg">
+    <source src="stay.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-const envelope = document.getElementById("envelope");
-const music = document.getElementById("bgMusic");
+    const envelope = document.getElementById("envelope");
+    const music = document.getElementById("bgMusic");
+    const START_TIME = 34; 
+    const TARGET_VOLUME = 0.7;
+    let fadeInterval = null;
 
-const START_TIME = 34;   // saniye
-const TARGET_VOLUME = 0.7;
-let fadeInterval = null;
-
-envelope.addEventListener("click", () => {
-  envelope.classList.toggle("open");
-
-  if (envelope.classList.contains("open")) {
-    music.currentTime = START_TIME;
-    music.volume = 0;
-    music.play();
-
-    // 🔊 Yumuşak ses artışı (fade in)
-    clearInterval(fadeInterval);
-    fadeInterval = setInterval(() => {
-      if (music.volume < TARGET_VOLUME) {
-        music.volume = Math.min(music.volume + 0.02, TARGET_VOLUME);
-      } else {
-        clearInterval(fadeInterval);
-      }
-    }, 80);
-
-  } else {
-    music.pause();
-    music.currentTime = 0;
-  }
-});
+    envelope.addEventListener("click", () => {
+        envelope.classList.toggle("open");
+        if (envelope.classList.contains("open")) {
+            music.currentTime = START_TIME;
+            music.volume = 0;
+            music.play().catch(e => console.log("Oynatma hatası:", e));
+            clearInterval(fadeInterval);
+            fadeInterval = setInterval(() => {
+                if (music.volume < TARGET_VOLUME) {
+                    music.volume = Math.min(music.volume + 0.05, TARGET_VOLUME);
+                } else {
+                    clearInterval(fadeInterval);
+                }
+            }, 100);
+        } else {
+            music.pause();
+        }
+    });
 </script>
-
 </body>
 </html>
