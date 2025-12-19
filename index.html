@@ -32,10 +32,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
-        /* ÖN YÜZ (Yazı Kaldırıldı) */
         .env-front { background: var(--env-main); z-index: 2; }
-
-        /* ARKA YÜZ */
         .env-back { transform: rotateY(180deg); background: var(--env-main); }
 
         .flap { 
@@ -112,7 +109,7 @@
         <a href="Https://maps.app.goo.gl/yZ4XqhL7UiP3D3u97?g_st=ac" target="_blank" class="maps-btn">KONUMU AÇ</a>
     </div>
 
-    <audio id="bgMusic"><source src="stay.mp3" type="audio/mpeg"></audio>
+    <audio id="bgMusic" preload="auto"><source src="stay.mp3" type="audio/mpeg"></audio>
 
     <script>
         const envelope = document.getElementById('envelope');
@@ -126,8 +123,20 @@
         let startY = 0;
         let isDragging = false;
         let isOpen = false;
+        let audioUnlocked = false;
+
+        // iPhone ve Samsung için ses kilidi açma
+        const unlockAudio = () => {
+            if (audioUnlocked) return;
+            music.play().then(() => {
+                music.pause();
+                music.currentTime = 34;
+                audioUnlocked = true;
+            }).catch(() => {});
+        };
 
         const handleStart = (e) => {
+            unlockAudio();
             if (isOpen) return;
             isDragging = true;
             startX = (e.pageX || e.touches[0].pageX);
@@ -157,8 +166,8 @@
         window.addEventListener('mousedown', handleStart);
         window.addEventListener('mousemove', handleMove);
         window.addEventListener('mouseup', handleEnd);
-        window.addEventListener('touchstart', handleStart);
-        window.addEventListener('touchmove', handleMove);
+        window.addEventListener('touchstart', handleStart, {passive: false});
+        window.addEventListener('touchmove', handleMove, {passive: false});
         window.addEventListener('touchend', handleEnd);
 
         seal.addEventListener('click', (e) => {
@@ -167,7 +176,7 @@
             if(!isOpen && (currentY === 180 || currentY === 540)) {
                 envelope.classList.add('open');
                 isOpen = true;
-                music.currentTime = 34; music.volume = 0.7;
+                music.volume = 0.7;
                 music.play().catch(() => {});
             }
         });
