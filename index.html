@@ -17,33 +17,28 @@
             z-index: 1; pointer-events: none;
         }
 
-        /* 3D Sahne ve Zarf Konteynırı */
         .scene { width: 340px; height: 220px; z-index: 10; position: relative; }
         
         .envelope {
             width: 100%; height: 100%; position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.1s linear; /* Manuel sürükleme için hızlı tepki */
+            transition: transform 0.1s linear;
         }
 
-        /* Zarf Yüzleri */
         .env-face {
             position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
-        /* ÖN YÜZ (Mühürsüz) */
         .env-front { background: var(--env-main); z-index: 2; display: flex; justify-content: center; align-items: center; }
         .env-front::after { content: "↔ Döndür ve Aç"; color: white; font-size: 14px; opacity: 0.7; }
 
-        /* ARKA YÜZ (Mühürlü ve Açılan) */
         .env-back { transform: rotateY(180deg); background: var(--env-main); }
 
-        /* Zarf Parçaları */
         .flap { 
             position: absolute; inset: 0; background: var(--env-dark); 
             clip-path: polygon(0 0, 50% 55%, 100% 0); 
-            transform-origin: top; z-index: 6; transition: 0.8s ease-in-out;
+            transform-origin: top; z-index: 6; transition: 0.6s ease-in-out;
         }
         .waist-l { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(0 0, 0 100%, 100% 50%); z-index: 3; }
         .waist-r { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(100% 0, 0 50%, 100% 100%); z-index: 3; }
@@ -54,15 +49,14 @@
             transform: translate(-50%, -50%); background: radial-gradient(circle, var(--gold2), var(--gold1), var(--gold3));
             border-radius: 50%; z-index: 7; display: flex; justify-content: center; align-items: center;
             color: white; font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.4s;
-            pointer-events: auto; cursor: pointer;
+            cursor: pointer;
         }
 
-        /* Kart Ayarları */
         .card {
             position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px;
             background: white; border: 1.5px solid var(--gold1); border-radius: 4px;
             padding: 12px; text-align: center; z-index: 2;
-            transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
             display: flex; flex-direction: column; justify-content: space-between; align-items: center;
         }
 
@@ -72,16 +66,19 @@
         .info { font-size: 11px; line-height: 1.4; color: #444; }
         #countdown { font-size: 11px; font-weight: bold; color: var(--gold3); border-top: 1px solid #f0f0f0; width: 100%; padding-top: 6px; }
 
-        /* AÇIK DURUMU */
+        /* AÇIK-KAPALI DURUMLARI */
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
         .envelope.open .card { transform: translateY(-135px); z-index: 10; box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
-        .envelope.open .seal { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        .envelope.open .seal { transform: translate(-50%, -50%) scale(0.5); opacity: 0; pointer-events: none; }
+
+        /* Kart açıkken kapatma butonu veya direkt karta tıklama */
+        .card { cursor: pointer; }
 
         .maps-btn {
             position: absolute; bottom: -80px; left: 50%; transform: translateX(-50%);
             background: linear-gradient(135deg, var(--gold3), var(--gold1));
             color: white; text-decoration: none; padding: 12px 35px; border-radius: 25px;
-            font-weight: bold; font-size: 14px; opacity: 0; transition: 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            font-weight: bold; font-size: 14px; opacity: 0; transition: 0.6s ease;
             z-index: 25; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
         }
         .envelope.open ~ .maps-btn { opacity: 1; bottom: -65px; }
@@ -94,21 +91,19 @@
     <div class="scene" id="scene">
         <div class="envelope" id="envelope">
             <div class="env-face env-front"></div>
-            
-            <div class="env-face env-back" id="backSide">
+            <div class="env-face env-back">
                 <div class="flap"></div>
                 <div class="waist-l"></div>
                 <div class="waist-r"></div>
                 <div class="waist-b"></div>
                 <div class="seal" id="seal">❤</div>
-                
-                <div class="card">
+                <div class="card" id="card">
                     <h2>Eftal <span>&</span> M. Fatih</h2>
                     <img src="1000023273.jpg" class="davetiye-foto">
                     <div class="info">
-                        Bu özel günümüzde yanımızda olmanızdan<br>büyük mutluluk duyarız.
+                        Mutluluğumuza ortak olmanız dileğiyle.<br>
                         <strong>11 OCAK 2026 – 19:00</strong>
-                        Recep Tayyip Erdoğan Blv. No:164<br>Haliliye / Şanlıurfa
+                        Haliliye / Şanlıurfa
                     </div>
                     <div id="countdown"></div>
                 </div>
@@ -122,6 +117,7 @@
     <script>
         const envelope = document.getElementById('envelope');
         const seal = document.getElementById('seal');
+        const card = document.getElementById('card');
         const music = document.getElementById('bgMusic');
         
         let rotation = 0;
@@ -129,27 +125,23 @@
         let isDragging = false;
         let isOpen = false;
 
-        // --- SÜRÜKLEME VE DÖNDÜRME MANTIĞI ---
+        // Döndürme
         const startDrag = (e) => {
             isDragging = true;
             startX = e.pageX || e.touches[0].pageX;
             envelope.style.transition = 'none';
         };
-
         const onDrag = (e) => {
             if (!isDragging) return;
             const x = e.pageX || e.touches[0].pageX;
             const diff = x - startX;
-            rotation += diff * 0.5; // Hassasiyet ayarı
+            rotation += diff * 0.5;
             envelope.style.transform = `rotateY(${rotation}deg)`;
             startX = x;
         };
-
         const stopDrag = () => {
             isDragging = false;
             envelope.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
-            
-            // En yakın yüze sabitleme (Opsiyonel: Tam tur hissi için)
             const normalizedRotation = Math.round(rotation / 180) * 180;
             rotation = normalizedRotation;
             envelope.style.transform = `rotateY(${rotation}deg)`;
@@ -162,31 +154,32 @@
         window.addEventListener('touchmove', onDrag);
         window.addEventListener('touchend', stopDrag);
 
-        // --- AÇILMA MANTIĞI ---
-        // Sadece arka yüz (mühürlü taraf) görünürken açılabilir
+        // Açma Fonksiyonu
         seal.addEventListener('click', (e) => {
-            e.stopPropagation(); // Sürükleme ile karışmaması için
-            const currentRotation = Math.abs(rotation % 360);
-            
-            // Eğer arka yüz yaklaşık olarak kullanıcıya bakıyorsa (180, 540... dereceler)
-            if (!isOpen && (currentRotation > 150 && currentRotation < 210 || currentRotation > -210 && currentRotation < -150)) {
+            e.stopPropagation();
+            if(!isOpen) {
                 envelope.classList.add('open');
                 isOpen = true;
                 playMusic();
             }
         });
 
+        // Kapatma Fonksiyonu (Karta tıklandığında)
+        card.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if(isOpen) {
+                envelope.classList.remove('open');
+                isOpen = false;
+                music.pause();
+            }
+        });
+
         function playMusic() {
-            music.currentTime = 34; music.volume = 0;
+            music.currentTime = 34; music.volume = 0.7;
             music.play();
-            let vol = 0;
-            let fade = setInterval(() => {
-                if (vol < 0.7) { vol += 0.05; music.volume = vol; }
-                else clearInterval(fade);
-            }, 100);
         }
 
-        // Geri Sayım
+        // Sayaç
         const target = new Date("Jan 11, 2026 19:00:00").getTime();
         setInterval(() => {
             const diff = target - new Date().getTime();
@@ -199,4 +192,5 @@
         }, 1000);
     </script>
 </body>
-</html>
+    </html>
+ 
