@@ -3,33 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>3D Davetiye</title>
+    <title>3D Magic Invitation</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root{ --gold1:#d4af37; --gold2:#f6e27f; --gold3:#b8962e; --bg1:#fbf7f1; --env-main:#cfc6e8; --env-dark:#b7aed9; --env-light:#ebe6f7; }
         *{margin:0;padding:0;box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
         body{ min-height:100vh; display:flex; justify-content:center; align-items:center; background:var(--bg1); overflow:hidden; perspective: 2000px; font-family: serif; touch-action: none; }
 
+        /* Hareketli Arka Plan */
         .flower-bg {
-            position: absolute; inset:0;
+            position: absolute; inset:-10%;
             background-image: url("1000023316.jpg");
             background-size: cover; background-position: center;
             z-index: 1; pointer-events: none;
+            filter: brightness(0.9);
+            animation: bgMove 20s infinite alternate ease-in-out;
+        }
+        @keyframes bgMove {
+            0% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1.1) rotate(2deg); }
         }
 
         .scene { width: 340px; height: 220px; z-index: 10; position: relative; cursor: grab; }
-        .scene:active { cursor: grabbing; }
         
         .envelope {
             width: 100%; height: 100%; position: relative;
             transform-style: preserve-3d;
             transition: transform 0.1s linear;
-            transform: rotateX(0deg) rotateY(0deg);
+        }
+
+        /* Altın Parıltı Efekti Katmanı */
+        .shine {
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+            z-index: 10; pointer-events: none; border-radius: 8px;
+            opacity: 0.6; mix-blend-mode: overlay;
         }
 
         .env-face {
             position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            overflow: hidden;
         }
 
         .env-front { background: var(--env-main); z-index: 2; }
@@ -41,7 +56,7 @@
             transform-origin: top; z-index: 6; transition: 0.6s ease;
         }
         .waist-l { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(0 0, 0 100%, 100% 50%); z-index: 3; }
-        .waist-r { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(100% 0, 0 50%, 100 100%); z-index: 3; }
+        .waist-r { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(100% 0, 0 50%, 100% 100%); z-index: 3; }
         .waist-b { position: absolute; bottom: 0; width: 100%; height: 52%; background: var(--env-main); z-index: 4; border-radius: 0 0 8px 8px; }
 
         .seal {
@@ -58,18 +73,18 @@
             padding: 12px; text-align: center; z-index: 2;
             transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
             display: flex; flex-direction: column; justify-content: space-between; align-items: center;
-            cursor: pointer;
         }
 
-        h2 { font-family: 'Great Vibes', cursive; font-size: 28px; color: var(--gold3); }
-        h2 span { margin: 0 8px; }
+        h2 { font-family: 'Great Vibes', cursive; font-size: 28px; color: var(--gold3); opacity: 0; transform: translateY(10px); transition: 1s 0.4s ease; }
+        .envelope.open h2 { opacity: 1; transform: translateY(0); }
+        
         .davetiye-foto { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold1); }
         .info { font-size: 11px; line-height: 1.4; color: #444; }
         #countdown { font-size: 11px; font-weight: bold; color: var(--gold3); border-top: 1px solid #f0f0f0; width: 100%; padding-top: 6px; }
 
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
         .envelope.open .card { transform: translateY(-135px); z-index: 10; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
-        .envelope.open .seal { transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; }
+        .envelope.open .seal { transform: translate(-50%, -50%) scale(0); opacity: 0; }
 
         .maps-btn {
             position: absolute; bottom: -80px; left: 50%; transform: translateX(-50%);
@@ -87,8 +102,11 @@
 
     <div class="scene" id="scene">
         <div class="envelope" id="envelope">
-            <div class="env-face env-front"></div>
+            <div class="env-face env-front">
+                <div class="shine"></div>
+            </div>
             <div class="env-face env-back">
+                <div class="shine"></div>
                 <div class="flap"></div>
                 <div class="waist-l"></div>
                 <div class="waist-r"></div>
@@ -100,7 +118,7 @@
                     <div class="info">
                         Mutluluğumuza ortak olmanız dileğiyle.<br>
                         <strong>11 OCAK 2026 – 19:00</strong>
-                        Recep Tayyip Erdoğan Blv. No:164<br>Haliliye / Şanlıurfa
+                        Haliliye / Şanlıurfa
                     </div>
                     <div id="countdown"></div>
                 </div>
@@ -114,43 +132,21 @@
     <script>
         const envelope = document.getElementById('envelope');
         const seal = document.getElementById('seal');
-        const card = document.getElementById('card');
         const music = document.getElementById('bgMusic');
         
-        let rotY = 0;
-        let rotX = 0;
-        let startX = 0;
-        let startY = 0;
-        let isDragging = false;
-        let isOpen = false;
-        let audioUnlocked = false;
+        let rotY = 0, rotX = 0, startX = 0, startY = 0, isDragging = false, isOpen = false, audioUnlocked = false;
 
-        // iPhone için "Agresif" Ses Kilidi Açma
+        // iPhone Ses Kilidi Çözücü
         const unlockAudio = () => {
             if (audioUnlocked) return;
-            // Müziği kısa süreliğine oynatıp durdurarak ses kanalını aktifleştiririz
-            music.play().then(() => {
-                music.pause();
-                music.currentTime = 34; // İstediğin saniyeden başla
-                audioUnlocked = true;
-                console.log("Ses kilidi iPhone için açıldı.");
-            }).catch(() => {
-                console.log("Kullanıcı etkileşimi bekleniyor.");
-            });
+            music.play().then(() => { music.pause(); music.currentTime = 34; audioUnlocked = true; }).catch(() => {});
         };
 
-        // Kullanıcı ekrana dokunduğu veya tıkladığı an kilidi aç
         window.addEventListener('touchstart', unlockAudio, { once: true });
         window.addEventListener('mousedown', unlockAudio, { once: true });
 
-        const handleStart = (e) => {
-            if (isOpen) return;
-            isDragging = true;
-            startX = (e.pageX || e.touches[0].pageX);
-            startY = (e.pageY || e.touches[0].pageY);
-            envelope.style.transition = 'none';
-        };
-
+        // 3D Hareket Kontrolü
+        const handleStart = (e) => { if (isOpen) return; isDragging = true; startX = (e.pageX || e.touches[0].pageX); startY = (e.pageY || e.touches[0].pageY); envelope.style.transition = 'none'; };
         const handleMove = (e) => {
             if (!isDragging) return;
             const x = (e.pageX || e.touches[0].pageX);
@@ -158,10 +154,8 @@
             rotY += (x - startX) * 0.5;
             rotX -= (y - startY) * 0.5;
             envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-            startX = x;
-            startY = y;
+            startX = x; startY = y;
         };
-
         const handleEnd = () => {
             isDragging = false;
             envelope.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
@@ -177,6 +171,19 @@
         window.addEventListener('touchmove', handleMove, {passive: false});
         window.addEventListener('touchend', handleEnd);
 
+        // Konfeti Fonksiyonu
+        function fireConfetti() {
+            var count = 200;
+            var defaults = { origin: { y: 0.7 }, colors: ['#d4af37', '#f6e27f', '#ffffff'] };
+            function fire(particleRatio, opts) { confetti(Object.assign({}, defaults, opts, { particleCount: Math.floor(count * particleRatio) })); }
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+        }
+
+        // Açma ve Kutlama
         seal.addEventListener('click', (e) => {
             e.stopPropagation();
             const currentY = Math.abs(rotY % 360);
@@ -184,34 +191,22 @@
                 envelope.classList.add('open');
                 isOpen = true;
                 music.volume = 0.7;
-                // iPhone için kilit açılmadıysa burada tekrar zorluyoruz
-                const playPromise = music.play();
-                if (playPromise !== undefined) {
-                    playPromise.catch(() => {
-                        // Eğer hata verirse kullanıcıya mühre tekrar bastırıyoruz
-                        console.log("Tekrar etkileşim gerekiyor.");
-                    });
-                }
+                music.play();
+                setTimeout(fireConfetti, 400); // Kart yükselirken konfeti patlat
             }
         });
 
-        card.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if(isOpen) {
-                envelope.classList.remove('open');
-                isOpen = false;
-                music.pause();
-            }
+        // Kapatma
+        document.getElementById('card').addEventListener('click', (e) => {
+            if(isOpen) { envelope.classList.remove('open'); isOpen = false; music.pause(); }
         });
 
+        // Sayaç
         const target = new Date("Jan 11, 2026 19:00:00").getTime();
         setInterval(() => {
             const diff = target - new Date().getTime();
             if (diff < 0) return;
-            const d = Math.floor(diff / 86400000);
-            const h = Math.floor((diff % 86400000) / 3600000);
-            const m = Math.floor((diff % 3600000) / 60000);
-            const s = Math.floor((diff % 60000) / 1000);
+            const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
             document.getElementById("countdown").innerHTML = `${d} GÜN ${h} SAAT ${m} DAKİKA ${s} SN`;
         }, 1000);
     </script>
