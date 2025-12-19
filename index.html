@@ -17,6 +17,7 @@
             z-index: 1; pointer-events: none;
         }
 
+        /* 360 Derece Sahne */
         .scene { width: 340px; height: 220px; z-index: 10; position: relative; cursor: grab; }
         .scene:active { cursor: grabbing; }
         
@@ -32,11 +33,11 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
 
-        /* ÖN YÜZ */
+        /* ÖN YÜZ (Mühürsüz) */
         .env-front { background: var(--env-main); z-index: 2; display: flex; justify-content: center; align-items: center; }
-        .env-front::after { content: "↺ Her Yöne Çevir"; color: white; font-size: 14px; opacity: 0.7; font-family: sans-serif; }
+        .env-front::after { content: "↺ Her Yöne Çevir ve Aç"; color: white; font-size: 14px; opacity: 0.7; font-family: sans-serif; }
 
-        /* ARKA YÜZ */
+        /* ARKA YÜZ (Açılan Taraf) */
         .env-back { transform: rotateY(180deg); background: var(--env-main); }
 
         .flap { 
@@ -71,7 +72,7 @@
         .info { font-size: 11px; line-height: 1.4; color: #444; }
         #countdown { font-size: 11px; font-weight: bold; color: var(--gold3); border-top: 1px solid #f0f0f0; width: 100%; padding-top: 6px; }
 
-        /* DURUM KONTROLLERİ */
+        /* AÇILMA/KAPANMA ANİMASYONLARI */
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
         .envelope.open .card { transform: translateY(-135px); z-index: 10; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
         .envelope.open .seal { transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; }
@@ -105,13 +106,13 @@
                     <div class="info">
                         Mutluluğumuza ortak olmanız dileğiyle.<br>
                         <strong>11 OCAK 2026 – 19:00</strong>
-                        Haliliye / Şanlıurfa
+                        Recep Tayyip Erdoğan Blv. No:164<br>Haliliye / Şanlıurfa
                     </div>
                     <div id="countdown"></div>
                 </div>
             </div>
         </div>
-        <a href="https://maps.google.com/?q=37.163105,38.821438" target="_blank" class="maps-btn">KONUMU AÇ</a>
+        <a href="Https://maps.app.goo.gl/yZ4XqhL7UiP3D3u97?g_st=ac" target="_blank" class="maps-btn">KONUMU AÇ</a>
     </div>
 
     <audio id="bgMusic"><source src="stay.mp3" type="audio/mpeg"></audio>
@@ -129,9 +130,9 @@
         let isDragging = false;
         let isOpen = false;
 
-        // --- TAM SERBEST DÖNDÜRME (X ve Y Ekseni) ---
+        // --- 3D HER YÖNE SERBEST DÖNDÜRME ---
         const handleStart = (e) => {
-            if (isOpen) return; // Kart açıkken döndürmeyi durdur (opsiyonel)
+            if (isOpen) return;
             isDragging = true;
             startX = (e.pageX || e.touches[0].pageX);
             startY = (e.pageY || e.touches[0].pageY);
@@ -147,7 +148,7 @@
             const moveY = y - startY;
             
             rotY += moveX * 0.5;
-            rotX -= moveY * 0.5; // Yukarı-Aşağı yönünü düzeltmek için eksi
+            rotX -= moveY * 0.5; 
             
             envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
             
@@ -159,9 +160,9 @@
             isDragging = false;
             envelope.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
             
-            // X ve Y eksenlerini en yakın mantıklı açıya sabitle
+            // X ve Y eksenlerini en yakın mantıklı açıya kilitle (Ön veya Arka)
             rotY = Math.round(rotY / 180) * 180;
-            rotX = Math.round(rotX / 360) * 360; // Yukarı aşağıda tam turu koru
+            rotX = Math.round(rotX / 360) * 360; 
             
             envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
         };
@@ -173,16 +174,16 @@
         window.addEventListener('touchmove', handleMove);
         window.addEventListener('touchend', handleEnd);
 
-        // --- AÇMA / KAPATMA ---
+        // --- AÇMA VE KAPATMA MANTIĞI ---
         seal.addEventListener('click', (e) => {
             e.stopPropagation();
-            // Arka yüz yaklaşık olarak bakıyorsa açılır
-            const checkY = Math.abs(rotY % 360);
-            if(!isOpen && (checkY === 180 || checkY === 540)) {
+            // Zarf sadece arkası kullanıcıya bakıyorken açılabilir
+            const currentY = Math.abs(rotY % 360);
+            if(!isOpen && (currentY === 180 || currentY === 540)) {
                 envelope.classList.add('open');
                 isOpen = true;
                 music.currentTime = 34; music.volume = 0.7;
-                music.play().catch(e => console.log("Müzik için etkileşim gerekiyor."));
+                music.play().catch(() => console.log("Müzik için dokunma gerekiyor."));
             }
         });
 
