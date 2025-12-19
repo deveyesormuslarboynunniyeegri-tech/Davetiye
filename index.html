@@ -8,8 +8,33 @@
     <style>
         :root{ --gold1:#d4af37; --gold2:#f6e27f; --gold3:#b8962e; --bg1:#fbf7f1; --bg2:#f1e8dc; --bg3:#e8dbc8; --env-main:#cfc6e8; --env-dark:#b7aed9; --env-light:#ebe6f7; }
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{ min-height:100vh; display:flex; justify-content:center; align-items:center; font-family:"Times New Roman", serif; background:radial-gradient(circle at top,var(--bg1),var(--bg2),var(--bg3)); overflow:hidden; }
         
+        body{ 
+            min-height:100vh; 
+            display:flex; 
+            justify-content:center; 
+            align-items:center; 
+            font-family:"Times New Roman", serif; 
+            background:radial-gradient(circle at top,var(--bg1),var(--bg2),var(--bg3)); 
+            overflow:hidden; 
+            position: relative;
+        }
+
+        /* ARKA PLAN ÇİÇEKLERİ (Zarfın Arkasında Kalır) */
+        .bg-flowers {
+            position: absolute;
+            bottom: -20px;
+            width: 100%;
+            height: 150px;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            font-size: 80px;
+            color: rgba(207, 198, 232, 0.4); /* Mor zarf ile uyumlu şeffaf mor */
+            z-index: 1; /* Zarfın (z-index: 5) arkasında */
+            pointer-events: none;
+        }
+
         .wrapper{width:360px; position:relative; z-index:5;} 
         .envelope{ width:360px; height:230px; position:relative; perspective:1600px; cursor:pointer; filter:drop-shadow(0 30px 45px rgba(0,0,0,0.2)); }
         .envelope-back{position:absolute; inset:0; background:var(--env-main); border-radius:6px; z-index:1;}
@@ -19,54 +44,46 @@
         .envelope-flap{position:absolute; inset:0; background:linear-gradient(to bottom,var(--env-dark),var(--env-main)); clip-path:polygon(0 0,50% 55%,100% 0); transform-origin:top; transition:transform 1s ease; z-index:6;}
         .seal{position:absolute; top:50%; left:50%; width:70px; height:70px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle at top left,var(--gold2),var(--gold1),var(--gold3)); box-shadow:inset 0 0 8px rgba(255,255,255,0.6),0 10px 18px rgba(0,0,0,0.35); z-index:7; display:flex; justify-content:center; align-items:center; color:white; font-size:24px;}
         
-        .card{ position:absolute; top:6%; left:5%; width:90%; height:90%; background:white; border:1px solid var(--gold1); border-radius:4px; padding:10px 5px; text-align:center; display:flex; flex-direction:column; justify-content:space-between; align-items:center; transition:transform 1s ease; z-index:2; overflow: hidden; }
-
-        /* ALT KISIMDAKİ ÇİÇEK DETAYI */
-        .card::after {
-            content: "✿ ✿ ✿"; 
-            position: absolute; 
-            bottom: 35px; /* Geri sayımın hemen üstünde */
-            font-size: 35px; 
-            color: rgba(207, 198, 232, 0.5); 
-            z-index: 1;
-            width: 100%;
-            text-align: center;
-        }
-
-        h2 { font-family: 'Great Vibes', cursive; font-size: 30px; color: var(--gold3); margin-top: 5px; z-index: 2; }
-        .davetiye-foto { width: 75px; height: 75px; object-fit: cover; border-radius: 50%; border: 2px solid var(--gold1); margin: 0; z-index: 2; }
+        /* KART TEMİZLENDİ */
+        .card{ position:absolute; top:6%; left:5%; width:90%; height:90%; background:white; border:1px solid var(--gold1); border-radius:4px; padding:12px; text-align:center; display:flex; flex-direction:column; justify-content:center; align-items:center; transition:transform 1s ease; z-index:2; }
+        
+        h2 { font-family: 'Great Vibes', cursive; font-size: 32px; color: var(--gold3); margin-bottom: 5px; }
+        .davetiye-foto { width: 85px; height: 85px; object-fit: cover; border-radius: 50%; border: 2px solid var(--gold1); margin: 5px 0; }
         
         .envelope.open .envelope-flap{transform:rotateX(180deg);}
-        /* KART DAHA YUKARI ÇIKSIN (Geri sayım ve çiçekler görünsün) */
-        .envelope.open .card{transform:translateY(-130px); box-shadow:0 28px 45px rgba(0,0,0,0.3); z-index:8;}
+        .envelope.open .card{transform:translateY(-110px); box-shadow:0 28px 45px rgba(0,0,0,0.3); z-index:8;}
         
         .envelope.open .seal{opacity:0; transition:opacity .4s; pointer-events:none;}
-        
-        .info{font-size: 11px; color: #444; line-height: 1.2; width: 100%; z-index: 2;}
-        .info strong { font-size: 12px; display: block; margin: 2px 0; }
-        
-        #countdown { font-size: 12px; font-weight: bold; color: #b8962e; background: #fffaf0; padding: 5px; width: 100%; border-top: 1px solid #eee; z-index: 2; }
+        .info{font-size: 13px; color: #444; line-height: 1.4;}
+
+        /* GERİ SAYIM KARTIN EN ALTINDA */
+        #countdown { margin-top: 10px; font-weight: bold; color: var(--gold3); font-size: 12px; }
     </style>
 </head>
 <body>
-<div class="wrapper">
-    <div class="envelope" id="envelope">
-        <div class="envelope-back"></div>
-        <div class="card">
-            <h2>Eftal & M. Fatih</h2>
-            <img src="1000023273.jpg" alt="Foto" class="davetiye-foto">
-            <div class="info">
-                Birlikteliğimizi sonsuzluğa taşıyacağımız bu günde<br>sizleri aramızda görmekten mutluluk duyarız.<br>
-                <strong>11 Ocak 2026 – 19:00</strong>
-                <div class="location">Haliliye / Şanlıurfa</div>
+
+    <div class="bg-flowers">✿ ❀ ✿ ❀ ✿</div>
+
+    <div class="wrapper">
+        <div class="envelope" id="envelope">
+            <div class="envelope-back"></div>
+            <div class="card">
+                <h2>Eftal & M. Fatih</h2>
+                <img src="1000023273.jpg" alt="Foto" class="davetiye-foto">
+                <div class="info">
+                    Birlikteliğimizi sonsuzluğa taşıyacağımız bu günde<br>sizleri aramızda görmekten mutluluk duyarız.<br>
+                    <strong>11 Ocak 2026 – 19:00</strong>
+                    <div class="location">Haliliye / Şanlıurfa</div>
+                    <div id="countdown"></div>
+                </div>
             </div>
-            <div id="countdown">Hesaplanıyor...</div>
+            <div class="envelope-left"></div><div class="envelope-right"></div><div class="envelope-bottom"></div><div class="envelope-flap"></div>
+            <div class="seal">❤</div>
         </div>
-        <div class="envelope-left"></div><div class="envelope-right"></div><div class="envelope-bottom"></div><div class="envelope-flap"></div>
-        <div class="seal">❤</div>
     </div>
-</div>
-<audio id="bgMusic" preload="auto"><source src="stay.mp3" type="audio/mpeg"></audio>
+
+    <audio id="bgMusic" preload="auto"><source src="stay.mp3" type="audio/mpeg"></audio>
+
 <script>
     const envelope = document.getElementById("envelope");
     const music = document.getElementById("bgMusic");
@@ -83,19 +100,15 @@
         } else { music.pause(); }
     });
 
-    function updateCountdown() {
-        const target = new Date("Jan 11, 2026 19:00:00").getTime();
-        const now = new Date().getTime();
-        const diff = target - now;
-        if (diff < 0) { document.getElementById("countdown").innerHTML = "Mutluluklar dileriz!"; return; }
+    const target = new Date("Jan 11, 2026 19:00:00").getTime();
+    setInterval(() => {
+        const diff = target - new Date().getTime();
         const d = Math.floor(diff / (1000 * 60 * 60 * 24));
         const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const s = Math.floor((diff % (1000 * 60)) / 1000);
-        document.getElementById("countdown").innerHTML = `${d}g ${h}s ${m}d ${s}sn`;
-    }
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
+        document.getElementById("countdown").innerHTML = d + "g " + h + "s " + m + "d " + s + "sn";
+    }, 1000);
 </script>
 </body>
-                                             </html>
+</html>
