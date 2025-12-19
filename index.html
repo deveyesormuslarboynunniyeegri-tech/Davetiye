@@ -41,7 +41,7 @@
             transform-origin: top; z-index: 6; transition: 0.6s ease;
         }
         .waist-l { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(0 0, 0 100%, 100% 50%); z-index: 3; }
-        .waist-r { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(100% 0, 0 50%, 100% 100%); z-index: 3; }
+        .waist-r { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(100% 0, 0 50%, 100 100%); z-index: 3; }
         .waist-b { position: absolute; bottom: 0; width: 100%; height: 52%; background: var(--env-main); z-index: 4; border-radius: 0 0 8px 8px; }
 
         .seal {
@@ -109,7 +109,7 @@
         <a href="Https://maps.app.goo.gl/yZ4XqhL7UiP3D3u97?g_st=ac" target="_blank" class="maps-btn">KONUMU AÇ</a>
     </div>
 
-    <audio id="bgMusic" preload="auto"><source src="stay.mp3" type="audio/mpeg"></audio>
+    <audio id="bgMusic" playsinline webkit-playsinline><source src="stay.mp3" type="audio/mpeg"></audio>
 
     <script>
         const envelope = document.getElementById('envelope');
@@ -125,18 +125,25 @@
         let isOpen = false;
         let audioUnlocked = false;
 
-        // iPhone ve Samsung için ses kilidi açma
+        // iPhone için "Agresif" Ses Kilidi Açma
         const unlockAudio = () => {
             if (audioUnlocked) return;
+            // Müziği kısa süreliğine oynatıp durdurarak ses kanalını aktifleştiririz
             music.play().then(() => {
                 music.pause();
-                music.currentTime = 34;
+                music.currentTime = 34; // İstediğin saniyeden başla
                 audioUnlocked = true;
-            }).catch(() => {});
+                console.log("Ses kilidi iPhone için açıldı.");
+            }).catch(() => {
+                console.log("Kullanıcı etkileşimi bekleniyor.");
+            });
         };
 
+        // Kullanıcı ekrana dokunduğu veya tıkladığı an kilidi aç
+        window.addEventListener('touchstart', unlockAudio, { once: true });
+        window.addEventListener('mousedown', unlockAudio, { once: true });
+
         const handleStart = (e) => {
-            unlockAudio();
             if (isOpen) return;
             isDragging = true;
             startX = (e.pageX || e.touches[0].pageX);
@@ -177,7 +184,14 @@
                 envelope.classList.add('open');
                 isOpen = true;
                 music.volume = 0.7;
-                music.play().catch(() => {});
+                // iPhone için kilit açılmadıysa burada tekrar zorluyoruz
+                const playPromise = music.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        // Eğer hata verirse kullanıcıya mühre tekrar bastırıyoruz
+                        console.log("Tekrar etkileşim gerekiyor.");
+                    });
+                }
             }
         });
 
