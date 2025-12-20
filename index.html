@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>3D Davetiye</title>
+    <title>Eftal & M. Fatih Davetiye</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
         :root{ --gold1:#d4af37; --gold2:#f6e27f; --gold3:#b8962e; --bg1:#fbf7f1; --env-main:#cfc6e8; --env-dark:#b7aed9; --env-light:#ebe6f7; }
@@ -106,7 +106,7 @@
                 </div>
             </div>
         </div>
-        <a href="Https://maps.app.goo.gl/yZ4XqhL7UiP3D3u97?g_st=ac" target="_blank" class="maps-btn">KONUMU AÇ</a>
+        <a href="https://maps.google.com/?q=Recep+Tayyip+Erdoğan+Blv+No:164+Haliliye+Şanlıurfa" target="_blank" class="maps-btn">KONUMU AÇ</a>
     </div>
 
     <audio id="bgMusic" playsinline webkit-playsinline><source src="stay.mp3" type="audio/mpeg"></audio>
@@ -125,21 +125,17 @@
         let isOpen = false;
         let audioUnlocked = false;
 
-        // iPhone için "Agresif" Ses Kilidi Açma
         const unlockAudio = () => {
             if (audioUnlocked) return;
-            // Müziği kısa süreliğine oynatıp durdurarak ses kanalını aktifleştiririz
             music.play().then(() => {
                 music.pause();
-                music.currentTime = 34; // İstediğin saniyeden başla
+                music.currentTime = 34; 
                 audioUnlocked = true;
-                console.log("Ses kilidi iPhone için açıldı.");
             }).catch(() => {
                 console.log("Kullanıcı etkileşimi bekleniyor.");
             });
         };
 
-        // Kullanıcı ekrana dokunduğu veya tıkladığı an kilidi aç
         window.addEventListener('touchstart', unlockAudio, { once: true });
         window.addEventListener('mousedown', unlockAudio, { once: true });
 
@@ -177,30 +173,32 @@
         window.addEventListener('touchmove', handleMove, {passive: false});
         window.addEventListener('touchend', handleEnd);
 
+        // MÜHÜR TIKLANDIĞINDA (AÇILIŞ)
         seal.addEventListener('click', (e) => {
             e.stopPropagation();
             const currentY = Math.abs(rotY % 360);
             if(!isOpen && (currentY === 180 || currentY === 540)) {
                 envelope.classList.add('open');
                 isOpen = true;
+                
+                // Müzik ayarı: Her açılışta 34. saniyeye sar ve oynat
+                music.currentTime = 34;
                 music.volume = 0.7;
-                // iPhone için kilit açılmadıysa burada tekrar zorluyoruz
+                
                 const playPromise = music.play();
                 if (playPromise !== undefined) {
-                    playPromise.catch(() => {
-                        // Eğer hata verirse kullanıcıya mühre tekrar bastırıyoruz
-                        console.log("Tekrar etkileşim gerekiyor.");
-                    });
+                    playPromise.catch(e => console.log("Oynatma engellendi:", e));
                 }
             }
         });
 
+        // KART TIKLANDIĞINDA (KAPANIŞ)
         card.addEventListener('click', (e) => {
             e.stopPropagation();
             if(isOpen) {
                 envelope.classList.remove('open');
                 isOpen = false;
-                music.pause();
+                music.pause(); // Kapanınca müziği durdurur
             }
         });
 
