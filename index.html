@@ -4,151 +4,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Eftal & M. Fatih Davetiye</title>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --gold1: #d4af37; --gold2: #f6e27f; --gold3: #b8962e; --bg1: #fbf7f1; 
-            --env-main: #cfc6e8; --env-dark: #b7aed9; --env-light: #ebe6f7; 
-        }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body { 
-            background: var(--bg1); 
-            font-family: 'Montserrat', sans-serif; 
-            overflow-x: hidden;
-            overflow-y: hidden; /* Zarf açılana kadar kilitli */
-        }
+        :root{ --gold1:#d4af37; --gold2:#f6e27f; --gold3:#b8962e; --bg1:#fbf7f1; --env-main:#cfc6e8; --env-dark:#b7aed9; --env-light:#ebe6f7; }
+        *{margin:0;padding:0;box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+        body{ min-height:100vh; display:flex; justify-content:center; align-items:center; background:var(--bg1); overflow:hidden; perspective: 2000px; font-family: serif; touch-action: none; }
 
         .flower-bg {
-            position: fixed; inset: 0;
-            background: url("1000023316.jpg") center/cover no-repeat;
-            z-index: -1;
+            position: absolute; inset:0;
+            background-image: url("1000023316.jpg");
+            background-size: cover; background-position: center;
+            z-index: 1; pointer-events: none;
         }
 
-        /* 3D ALAN VE ZARF KONUMU */
-        .wrapper {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .hero-section {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            perspective: 2000px;
-            flex-shrink: 0;
-            transition: height 1s ease;
-        }
-
-        .scene { width: 340px; height: 220px; position: relative; cursor: grab; }
+        .scene { width: 340px; height: 220px; z-index: 10; position: relative; cursor: grab; }
+        .scene:active { cursor: grabbing; }
         
         .envelope {
             width: 100%; height: 100%; position: relative;
             transform-style: preserve-3d;
             transition: transform 0.1s linear;
+            transform: rotateX(0deg) rotateY(0deg);
         }
 
-        .env-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .env-face {
+            position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
         .env-front { background: var(--env-main); z-index: 2; }
-        .env-back { background: var(--env-main); transform: rotateY(180deg); }
+        .env-back { transform: rotateY(180deg); background: var(--env-main); }
 
         .flap { 
             position: absolute; inset: 0; background: var(--env-dark); 
             clip-path: polygon(0 0, 50% 55%, 100% 0); 
-            transform-origin: top; z-index: 6; transition: 0.8s ease;
+            transform-origin: top; z-index: 6; transition: 0.6s ease;
         }
         .waist-l { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(0 0, 0 100%, 100% 50%); z-index: 3; }
-        .waist-r { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(100% 0, 0 50%, 100% 100%); z-index: 3; }
+        .waist-r { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(100% 0, 0 50%, 100 100%); z-index: 3; }
         .waist-b { position: absolute; bottom: 0; width: 100%; height: 52%; background: var(--env-main); z-index: 4; border-radius: 0 0 8px 8px; }
 
         .seal {
             position: absolute; top: 50%; left: 50%; width: 65px; height: 65px;
             transform: translate(-50%, -50%); background: radial-gradient(circle, var(--gold2), var(--gold1), var(--gold3));
             border-radius: 50%; z-index: 7; display: flex; justify-content: center; align-items: center;
-            color: white; font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer;
+            color: white; font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.4s;
+            cursor: pointer;
         }
 
-        /* AÇILMA DURUMU */
-        .envelope.is-open .flap { transform: rotateX(180deg); z-index: 1; }
-        .envelope.is-open .seal { transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; }
-        
-        /* KAYDIRILABİLİR İÇERİK */
-        .content-section {
-            display: none;
-            width: 100%;
-            max-width: 500px;
-            background: white;
-            padding: 40px 20px;
-            text-align: center;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
-            border-radius: 30px 30px 0 0;
+        .card {
+            position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px;
+            background: white; border: 1.5px solid var(--gold1); border-radius: 4px;
+            padding: 12px; text-align: center; z-index: 2;
+            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+            cursor: pointer;
         }
 
-        .main-img { width: 100%; border-radius: 15px; margin-bottom: 20px; }
-        h1 { font-family: 'Great Vibes', cursive; font-size: 45px; color: var(--gold3); }
-        .countdown-container { display: flex; justify-content: center; gap: 10px; margin: 25px 0; }
-        .count-box { border: 1px solid var(--gold1); padding: 10px; border-radius: 10px; min-width: 65px; background: #fffcf7; }
-        .count-box span { font-size: 22px; font-weight: bold; color: var(--gold3); }
-        .btn { display: block; padding: 15px; margin: 10px 0; border-radius: 30px; text-decoration: none; color: white; font-weight: bold; }
-        .btn-maps { background: var(--gold3); }
-        .btn-wpp { background: #25D366; }
+        h2 { font-family: 'Great Vibes', cursive; font-size: 28px; color: var(--gold3); }
+        h2 span { margin: 0 8px; }
+        .davetiye-foto { width: 70px; height: 70px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold1); }
+        .info { font-size: 11px; line-height: 1.4; color: #444; }
+        #countdown { font-size: 11px; font-weight: bold; color: var(--gold3); border-top: 1px solid #f0f0f0; width: 100%; padding-top: 6px; }
+
+        .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
+        .envelope.open .card { transform: translateY(-135px); z-index: 10; box-shadow: 0 25px 50px rgba(0,0,0,0.2); }
+        .envelope.open .seal { transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; }
+
+        .maps-btn {
+            position: absolute; bottom: -80px; left: 50%; transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--gold3), var(--gold1));
+            color: white; text-decoration: none; padding: 12px 35px; border-radius: 25px;
+            font-weight: bold; font-size: 14px; opacity: 0; transition: 0.5s ease;
+            z-index: 25; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+        }
+        .envelope.open ~ .maps-btn { opacity: 1; bottom: -65px; }
     </style>
 </head>
 <body>
 
     <div class="flower-bg"></div>
-    <audio id="bgMusic" loop><source src="stay.mp3" type="audio/mpeg"></audio>
 
-    <div class="wrapper">
-        <div class="hero-section" id="hero">
-            <div class="scene" id="scene">
-                <div class="envelope" id="envelope">
-                    <div class="env-face env-front"></div>
-                    <div class="env-face env-back">
-                        <div class="flap"></div>
-                        <div class="waist-l"></div>
-                        <div class="waist-r"></div>
-                        <div class="waist-b"></div>
-                        <div class="seal" id="seal">❤</div>
+    <div class="scene" id="scene">
+        <div class="envelope" id="envelope">
+            <div class="env-face env-front"></div>
+            <div class="env-face env-back">
+                <div class="flap"></div>
+                <div class="waist-l"></div>
+                <div class="waist-r"></div>
+                <div class="waist-b"></div>
+                <div class="seal" id="seal">❤</div>
+                <div class="card" id="card">
+                    <h2>Eftal <span>&</span> M. Fatih</h2>
+                    <img src="1000023273.jpg" class="davetiye-foto">
+                    <div class="info">
+                        Mutluluğumuza ortak olmanız dileğiyle.<br>
+                        <strong>11 OCAK 2026 – 19:00</strong>
+                        Recep Tayyip Erdoğan Blv. No:164<br>Haliliye / Şanlıurfa
                     </div>
+                    <div id="countdown"></div>
                 </div>
             </div>
         </div>
-
-        <div class="content-section" id="mainContent">
-            <img src="1000023273.jpg" class="main-img">
-            <h1>Eftal & M. Fatih</h1>
-            <p>Aşkımıza tanıklık edeceğiniz bu özel günde mutluluğumuzu paylaşmak istiyoruz.</p>
-            
-            <div class="countdown-container">
-                <div class="count-box"><span id="days">00</span><br><small>Gün</small></div>
-                <div class="count-box"><span id="hours">00</span><br><small>Saat</small></div>
-                <div class="count-box"><span id="mins">00</span><br><small>Dk</small></div>
-                <div class="count-box"><span id="secs">00</span><br><small>Sn</small></div>
-            </div>
-
-            <p><strong>11 OCAK 2026 – 19:00</strong><br>Haliliye / Şanlıurfa</p>
-            
-            <a href="CONUM_LINKI" target="_blank" class="btn btn-maps">📍 KONUMU AÇ</a>
-            <a href="https://wa.me/905XXXXXXXXX" target="_blank" class="btn btn-wpp">✅ KATILIM BİLDİR</a>
-            <div style="height: 100px;"></div>
-        </div>
+        <a href="https://maps.google.com/?q=Recep+Tayyip+Erdoğan+Blv+No:164+Haliliye+Şanlıurfa" target="_blank" class="maps-btn">KONUMU AÇ</a>
     </div>
+
+    <audio id="bgMusic" playsinline webkit-playsinline><source src="stay.mp3" type="audio/mpeg"></audio>
 
     <script>
         const envelope = document.getElementById('envelope');
-        const mainContent = document.getElementById('mainContent');
+        const seal = document.getElementById('seal');
+        const card = document.getElementById('card');
         const music = document.getElementById('bgMusic');
         
-        let rotY = 0, rotX = 0, startX = 0, startY = 0, isDragging = false;
+        let rotY = 0;
+        let rotX = 0;
+        let startX = 0;
+        let startY = 0;
+        let isDragging = false;
+        let isOpen = false;
+        let audioUnlocked = false;
 
-        // 3D DÖNDÜRME - Kilit yok, her zaman çalışır
+        const unlockAudio = () => {
+            if (audioUnlocked) return;
+            music.play().then(() => {
+                music.pause();
+                music.currentTime = 34; 
+                audioUnlocked = true;
+            }).catch(() => {
+                console.log("Kullanıcı etkileşimi bekleniyor.");
+            });
+        };
+
+        window.addEventListener('touchstart', unlockAudio, { once: true });
+        window.addEventListener('mousedown', unlockAudio, { once: true });
+
         const handleStart = (e) => {
+            if (isOpen) return;
             isDragging = true;
             startX = (e.pageX || e.touches[0].pageX);
             startY = (e.pageY || e.touches[0].pageY);
@@ -162,52 +154,65 @@
             rotY += (x - startX) * 0.5;
             rotX -= (y - startY) * 0.5;
             envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-            startX = x; startY = y;
+            startX = x;
+            startY = y;
         };
 
         const handleEnd = () => {
             isDragging = false;
-            envelope.style.transition = 'transform 0.5s';
+            envelope.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
+            rotY = Math.round(rotY / 180) * 180;
+            rotX = Math.round(rotX / 360) * 360;
+            envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
         };
 
         window.addEventListener('mousedown', handleStart);
         window.addEventListener('mousemove', handleMove);
         window.addEventListener('mouseup', handleEnd);
-        window.addEventListener('touchstart', handleStart);
-        window.addEventListener('touchmove', handleMove);
+        window.addEventListener('touchstart', handleStart, {passive: false});
+        window.addEventListener('touchmove', handleMove, {passive: false});
         window.addEventListener('touchend', handleEnd);
 
-        // AÇILIŞ
-        document.getElementById('seal').addEventListener('click', (e) => {
+        // MÜHÜR TIKLANDIĞINDA (AÇILIŞ)
+        seal.addEventListener('click', (e) => {
             e.stopPropagation();
-            
-            // Zarf kapağını aç
-            envelope.classList.add('is-open');
-            
-            // Müziği 34. saniyeden başlat
-            music.currentTime = 34;
-            music.play();
-
-            // Biraz bekledikten sonra kaydırmayı aç ve bilgileri göster
-            setTimeout(() => {
-                mainContent.style.display = "block";
-                document.body.style.overflowY = "auto";
+            const currentY = Math.abs(rotY % 360);
+            if(!isOpen && (currentY === 180 || currentY === 540)) {
+                envelope.classList.add('open');
+                isOpen = true;
                 
-                // Sayfayı hafifçe aşağı kaydırarak içeriğin geldiğini hissettir
-                window.scrollBy({ top: 200, behavior: 'smooth' });
-            }, 800);
+                // Müzik ayarı: Her açılışta 34. saniyeye sar ve oynat
+                music.currentTime = 34;
+                music.volume = 0.7;
+                
+                const playPromise = music.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(e => console.log("Oynatma engellendi:", e));
+                }
+            }
         });
 
-        // GERİ SAYIM
+        // KART TIKLANDIĞINDA (KAPANIŞ)
+        card.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if(isOpen) {
+                envelope.classList.remove('open');
+                isOpen = false;
+                music.pause(); // Kapanınca müziği durdurur
+            }
+        });
+
         const target = new Date("Jan 11, 2026 19:00:00").getTime();
         setInterval(() => {
             const diff = target - new Date().getTime();
             if (diff < 0) return;
-            document.getElementById("days").innerText = Math.floor(diff / 86400000);
-            document.getElementById("hours").innerText = Math.floor((diff % 86400000) / 3600000);
-            document.getElementById("mins").innerText = Math.floor((diff % 3600000) / 60000);
-            document.getElementById("secs").innerText = Math.floor((diff % 60000) / 1000);
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            document.getElementById("countdown").innerHTML = `${d} GÜN ${h} SAAT ${m} DAKİKA ${s} SN`;
         }, 1000);
     </script>
 </body>
-</html>
+                                         </html>
+    
