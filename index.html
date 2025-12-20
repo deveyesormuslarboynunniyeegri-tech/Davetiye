@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root { 
-            --gold1: #d4af37; --gold3: #b8962e; --bg1: #fbf7f1; 
+            --gold1: #d4af37; --gold2: #f6e27f; --gold3: #b8962e; --bg1: #fbf7f1; 
             --env-main: #cfc6e8; --env-dark: #b7aed9; --env-light: #ebe6f7; 
         }
         
@@ -16,38 +16,38 @@
         body { 
             background: var(--bg1); 
             font-family: 'Montserrat', sans-serif; 
-            overflow-x: hidden; 
-            overflow-y: hidden; /* Başlangıçta kaydırma kapalı */
+            overflow-x: hidden;
+            overflow-y: hidden; /* Zarf açılana kadar scroll kapalı */
         }
 
-        /* Arkaplan Çiçekleri */
         .flower-bg {
             position: fixed; inset: 0;
             background: url("1000023316.jpg") center/cover no-repeat;
             z-index: -1;
         }
 
-        /* Giriş Ekranı ve Zarf Animasyonu */
+        /* 3D ALAN */
         .hero-section {
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             perspective: 2000px;
+            transition: transform 1s ease-in-out, opacity 1s;
         }
 
-        .scene { width: 340px; height: 220px; position: relative; cursor: pointer; transition: 1s ease; }
+        .scene { width: 340px; height: 220px; position: relative; cursor: grab; z-index: 100; }
+        .scene:active { cursor: grabbing; }
         
         .envelope {
             width: 100%; height: 100%; position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform: rotateY(180deg); /* Mühürlü taraf önde başlasın */
+            transition: transform 0.1s linear;
         }
 
         .env-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
-        .env-front { background: var(--env-main); transform: rotateY(180deg); }
-        .env-back { background: var(--env-main); }
+        .env-front { background: var(--env-main); z-index: 2; }
+        .env-back { background: var(--env-main); transform: rotateY(180deg); }
 
         .flap { 
             position: absolute; inset: 0; background: var(--env-dark); 
@@ -60,46 +60,33 @@
 
         .seal {
             position: absolute; top: 50%; left: 50%; width: 65px; height: 65px;
-            transform: translate(-50%, -50%); background: radial-gradient(circle, #f6e27f, #d4af37, #b8962e);
+            transform: translate(-50%, -50%); background: radial-gradient(circle, var(--gold2), var(--gold1), var(--gold3));
             border-radius: 50%; z-index: 7; display: flex; justify-content: center; align-items: center;
-            color: white; font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.4s;
+            color: white; font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer;
         }
 
-        /* Zarf Açıldığında */
-        .scene.open .flap { transform: rotateX(180deg); z-index: 1; }
-        .scene.open .seal { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-        .scene.open { transform: translateY(100vh); opacity: 0; pointer-events: none; }
-
-        /* Kaydırılabilir İçerik Alanı */
+        /* AÇILMA ANİMASYONU */
+        .open .flap { transform: rotateX(180deg); z-index: 1; }
+        .open .seal { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        
+        /* KAYDIRILABİLİR İÇERİK (VİDEODAKİ GİBİ) */
         .content-section {
-            display: none; /* Başlangıçta gizli */
+            display: none;
             width: 100%;
             max-width: 500px;
             margin: 0 auto;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             min-height: 100vh;
             padding: 40px 20px;
             text-align: center;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
 
-        .content-section img.main-img { width: 100%; border-radius: 10px; margin-bottom: 20px; }
-        h1 { font-family: 'Great Vibes', cursive; font-size: 45px; color: var(--gold3); margin: 20px 0; }
-        .details { font-size: 16px; line-height: 1.8; color: #555; margin-bottom: 30px; }
-        
-        .countdown-container {
-            display: flex; justify-content: center; gap: 15px; margin: 30px 0;
-            background: #fdfaf5; padding: 20px; border-radius: 15px; border: 1px solid var(--gold1);
-        }
-        .count-box { display: flex; flex-direction: column; font-weight: bold; }
-        .count-box span { font-size: 20px; color: var(--gold3); }
-        .count-box label { font-size: 10px; color: #888; text-transform: uppercase; }
-
-        .btn-group { display: flex; flex-direction: column; gap: 15px; padding: 20px; }
-        .btn { 
-            text-decoration: none; padding: 15px; border-radius: 30px; color: white; 
-            font-weight: bold; transition: 0.3s;
-        }
+        .main-img { width: 100%; border-radius: 10px; margin-bottom: 20px; }
+        h1 { font-family: 'Great Vibes', cursive; font-size: 45px; color: var(--gold3); }
+        .countdown-container { display: flex; justify-content: center; gap: 10px; margin: 20px 0; }
+        .count-box { background: white; padding: 10px; border-radius: 8px; border: 1px solid var(--gold1); min-width: 60px; }
+        .btn { display: block; padding: 15px; margin: 10px 0; border-radius: 30px; text-decoration: none; color: white; font-weight: bold; }
         .btn-maps { background: var(--gold3); }
         .btn-wpp { background: #25D366; }
     </style>
@@ -110,73 +97,96 @@
     <audio id="bgMusic" loop><source src="stay.mp3" type="audio/mpeg"></audio>
 
     <div class="hero-section" id="hero">
-        <div class="scene" id="scene" onclick="openEnvelope()">
-            <div class="envelope">
+        <div class="scene" id="scene">
+            <div class="envelope" id="envelope">
                 <div class="env-face env-front"></div>
                 <div class="env-face env-back">
                     <div class="flap"></div>
                     <div class="waist-l"></div>
                     <div class="waist-r"></div>
                     <div class="waist-b"></div>
-                    <div class="seal">❤</div>
+                    <div class="seal" id="seal">❤</div>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="content-section" id="mainContent">
-        <img src="1000023273.jpg" class="main-img" alt="Eftal & Fatih">
+        <img src="1000023273.jpg" class="main-img">
         <h1>Eftal & M. Fatih</h1>
+        <p>Mutluluğumuza ortak olmanız dileğiyle.</p>
         
-        <p class="details">
-            Aşkımıza tanıklık edeceğiniz bu özel günde,<br>
-            mutluluğumuz sizinle daha da büyüyecek.
-        </p>
-
         <div class="countdown-container">
-            <div class="count-box"><span id="days">00</span><label>Gün</label></div>
-            <div class="count-box"><span id="hours">00</span><label>Saat</label></div>
-            <div class="count-box"><span id="mins">00</span><label>Dakika</label></div>
-            <div class="count-box"><span id="secs">00</span><label>Saniye</label></div>
+            <div class="count-box"><span id="days">00</span><br><small>Gün</small></div>
+            <div class="count-box"><span id="hours">00</span><br><small>Saat</small></div>
+            <div class="count-box"><span id="mins">00</span><br><small>Dk</small></div>
+            <div class="count-box"><span id="secs">00</span><br><small>Sn</small></div>
         </div>
 
-        <p class="details">
-            <strong>11 OCAK 2026 – 19:00</strong><br>
-            Recep Tayyip Erdoğan Blv. No:164<br>Haliliye / Şanlıurfa
-        </p>
-
-        <div class="btn-group">
-            <a href="https://maps.google.com" target="_blank" class="btn btn-maps">📍 KONUMU GÖR</a>
-            <a href="https://wa.me/905XXXXXXXXX" target="_blank" class="btn btn-wpp">✅ KATILIM DURUMUNUZ</a>
-        </div>
+        <p><strong>11 OCAK 2026 – 19:00</strong><br>Haliliye / Şanlıurfa</p>
         
-        <div style="height: 100px;"></div> </div>
+        <a href="URL_BURAYA" target="_blank" class="btn btn-maps">📍 KONUMU AÇ</a>
+        <a href="https://wa.me/905XXXXXXXXX" target="_blank" class="btn btn-wpp">✅ KATILIM BİLDİR</a>
+        <div style="height: 50px;"></div>
+    </div>
 
     <script>
+        const envelope = document.getElementById('envelope');
+        const hero = document.getElementById('hero');
+        const mainContent = document.getElementById('mainContent');
         const music = document.getElementById('bgMusic');
+        
+        let rotY = 0, rotX = 0, startX = 0, startY = 0, isDragging = false;
 
-        function openEnvelope() {
-            const scene = document.getElementById('scene');
-            const hero = document.getElementById('hero');
-            const mainContent = document.getElementById('mainContent');
+        // 3D DÖNDÜRME KODLARI
+        const handleStart = (e) => {
+            isDragging = true;
+            startX = (e.pageX || e.touches[0].pageX);
+            startY = (e.pageY || e.touches[0].pageY);
+            envelope.style.transition = 'none';
+        };
 
-            // 1. Zarfı aç
-            scene.classList.add('open');
-            
-            // 2. Müziği başlat (34. saniyeden)
+        const handleMove = (e) => {
+            if (!isDragging) return;
+            const x = (e.pageX || e.touches[0].pageX);
+            const y = (e.pageY || e.touches[0].pageY);
+            rotY += (x - startX) * 0.5;
+            rotX -= (y - startY) * 0.5;
+            envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+            startX = x; startY = y;
+        };
+
+        const handleEnd = () => {
+            isDragging = false;
+            envelope.style.transition = 'transform 0.5s';
+        };
+
+        window.addEventListener('mousedown', handleStart);
+        window.addEventListener('mousemove', handleMove);
+        window.addEventListener('mouseup', handleEnd);
+        window.addEventListener('touchstart', handleStart);
+        window.addEventListener('touchmove', handleMove);
+        window.addEventListener('touchend', handleEnd);
+
+        // AÇILIŞ FONKSİYONU
+        document.getElementById('seal').addEventListener('click', (e) => {
+            e.stopPropagation();
+            envelope.classList.add('open');
             music.currentTime = 34;
             music.play();
 
-            // 3. Zarf aşağı kayıp kaybolduktan sonra ana içeriği göster
             setTimeout(() => {
-                hero.style.display = 'none';
-                mainContent.style.display = 'block';
-                document.body.style.overflowY = 'auto'; // Kaydırmayı aktif et
-                window.scrollTo(0, 0);
+                hero.style.transform = "translateY(-100vh)";
+                hero.style.opacity = "0";
+                setTimeout(() => {
+                    hero.style.display = "none";
+                    mainContent.style.display = "block";
+                    document.body.style.overflowY = "auto";
+                }, 800);
             }, 1000);
-        }
+        });
 
-        // Geri Sayım
+        // GERİ SAYIM
         const target = new Date("Jan 11, 2026 19:00:00").getTime();
         setInterval(() => {
             const diff = target - new Date().getTime();
@@ -188,4 +198,5 @@
         }, 1000);
     </script>
 </body>
-    </html>
+                        </html>
+                        
