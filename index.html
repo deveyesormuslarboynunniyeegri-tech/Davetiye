@@ -52,32 +52,27 @@
             cursor: pointer;
         }
 
-        /* KART GÜNCELLEMESİ: Scroll ve Boyut */
         .card {
             position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px;
             background: white; border: 1.5px solid var(--gold1); border-radius: 4px;
             padding: 20px 15px; text-align: center; z-index: 2;
             transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), height 0.6s ease;
-            overflow-y: auto; /* Dikey kaydırma aktif */
-            -webkit-overflow-scrolling: touch;
+            overflow-y: auto; /* Kaydırma açık */
+            touch-action: pan-y; /* Sadece dikey kaydırmaya izin ver */
         }
 
-        /* Kaydırma çubuğu tasarımı */
         .card::-webkit-scrollbar { width: 3px; }
         .card::-webkit-scrollbar-thumb { background: var(--gold1); border-radius: 10px; }
 
         h2 { font-family: 'Great Vibes', cursive; font-size: 28px; color: var(--gold3); margin-bottom: 10px; }
-        h2 span { margin: 0 8px; }
-        .davetiye-foto { width: 80px; height: 80px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold1); margin-bottom: 15px; }
-        .info { font-size: 13px; line-height: 1.6; color: #444; margin-bottom: 15px; }
-        #countdown { font-size: 12px; font-weight: bold; color: var(--gold3); border-top: 1px solid #f0f0f0; width: 100%; padding-top: 10px; margin-top: 10px; }
+        .davetiye-foto { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold1); margin-bottom: 15px; }
+        .info { font-size: 14px; line-height: 1.6; color: #444; margin-bottom: 15px; }
+        #countdown { font-size: 12px; font-weight: bold; color: var(--gold3); border-top: 1px solid #f0f0f0; width: 100%; padding-top: 10px; }
 
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
-        
-        /* Kartın yukarı çıkmış ve uzamış hali */
         .envelope.open .card { 
-            transform: translateY(-160px); 
-            height: 320px; 
+            transform: translateY(-180px); 
+            height: 350px; /* Kartın yüksekliği */
             z-index: 10; 
             box-shadow: 0 25px 50px rgba(0,0,0,0.2); 
         }
@@ -85,13 +80,13 @@
         .envelope.open .seal { transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; }
 
         .maps-btn {
-            position: absolute; bottom: -80px; left: 50%; transform: translateX(-50%);
+            position: absolute; bottom: -100px; left: 50%; transform: translateX(-50%);
             background: linear-gradient(135deg, var(--gold3), var(--gold1));
             color: white; text-decoration: none; padding: 12px 35px; border-radius: 25px;
             font-weight: bold; font-size: 14px; opacity: 0; transition: 0.5s ease;
             z-index: 25; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
         }
-        .envelope.open ~ .maps-btn { opacity: 1; bottom: -85px; }
+        .envelope.open ~ .maps-btn { opacity: 1; bottom: -110px; }
     </style>
 </head>
 <body>
@@ -108,13 +103,15 @@
                 <div class="waist-b"></div>
                 <div class="seal" id="seal">❤</div>
                 <div class="card" id="card">
-                    <h2>Eftal <span>&</span> M. Fatih</h2>
+                    <h2>Eftal & M. Fatih</h2>
                     <img src="1000023273.jpg" class="davetiye-foto">
                     <div class="info">
-                        Bu mutlu günümüzde sizleri de aramızda görmekten onur duyarız.<br><br>
-                        <strong>11 OCAK 2026 – 19:00</strong><br>
-                        Recep Tayyip Erdoğan Blv. No:164<br>Haliliye / Şanlıurfa<br><br>
-                        <i>Mutluluğumuza ortak olmanız dileğiyle.</i>
+                        Bu mutlu günümüzde sizleri de aramızda görmekten mutluluk duyarız.<br><br>
+                        <strong>Tarih: 11 OCAK 2026</strong><br>
+                        <strong>Saat: 19:00</strong><br><br>
+                        Recep Tayyip Erdoğan Blv. No:164<br>
+                        Haliliye / Şanlıurfa<br><br>
+                        Yaşam boyu sürecek beraberliğimizin ilk adımında yanımızda olmanız dileğiyle...
                     </div>
                     <div id="countdown"></div>
                 </div>
@@ -131,25 +128,12 @@
         const card = document.getElementById('card');
         const music = document.getElementById('bgMusic');
         
-        let rotY = 0;
-        let rotX = 0;
-        let startX = 0;
-        let startY = 0;
-        let isDragging = false;
-        let isOpen = false;
-        let audioUnlocked = false;
+        let rotY = 0, rotX = 0, startX = 0, startY = 0, isDragging = false, isOpen = false;
 
-        const unlockAudio = () => {
-            if (audioUnlocked) return;
-            music.play().then(() => {
-                music.pause();
-                music.currentTime = 34; 
-                audioUnlocked = true;
-            }).catch(() => {});
-        };
-
-        window.addEventListener('touchstart', unlockAudio, { once: true });
-        window.addEventListener('mousedown', unlockAudio, { once: true });
+        // KARTIN İÇİNDEKİ HAREKETLERİN DIŞARIYA SIZMASINI ENGELLER
+        card.addEventListener('touchstart', (e) => e.stopPropagation());
+        card.addEventListener('touchmove', (e) => e.stopPropagation());
+        card.addEventListener('mousedown', (e) => e.stopPropagation());
 
         const handleStart = (e) => {
             if (isOpen) return;
@@ -166,12 +150,10 @@
             rotY += (x - startX) * 0.5;
             rotX -= (y - startY) * 0.5;
             envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-            startX = x;
-            startY = y;
+            startX = x; startY = y;
         };
 
         const handleEnd = () => {
-            if (!isDragging) return;
             isDragging = false;
             envelope.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
             rotY = Math.round(rotY / 180) * 180;
@@ -187,42 +169,33 @@
         window.addEventListener('touchend', handleEnd);
 
         seal.addEventListener('click', (e) => {
-            e.stopPropagation();
             const currentY = Math.abs(rotY % 360);
             if(!isOpen && (currentY === 180 || currentY === 540)) {
                 envelope.classList.add('open');
                 isOpen = true;
                 music.currentTime = 34;
-                music.volume = 0.7;
-                music.play();
+                music.play().catch(() => {});
             }
         });
 
-        // Kaydırırken kapanmaması için dokunma süresi kontrolü
-        let touchTime;
-        card.addEventListener('touchstart', () => touchTime = Date.now());
-        card.addEventListener('touchend', () => {
-            if (Date.now() - touchTime < 200) { // Sadece kısa dokunuşta kapat
-                if(isOpen) {
-                    envelope.classList.remove('open');
-                    isOpen = false;
-                    music.pause();
-                }
+        // Kapatmak için kartın en üstüne tıklanabilir
+        card.addEventListener('dblclick', () => {
+            if(isOpen) {
+                envelope.classList.remove('open');
+                isOpen = false;
+                music.pause();
             }
         });
 
         const target = new Date("Jan 11, 2026 19:00:00").getTime();
         setInterval(() => {
             const diff = target - new Date().getTime();
-            if (diff < 0) {
-                document.getElementById("countdown").innerHTML = "MUTLULUKLAR DİLERİZ!";
-                return;
-            }
+            if (diff < 0) return;
             const d = Math.floor(diff / 86400000);
             const h = Math.floor((diff % 86400000) / 3600000);
             const m = Math.floor((diff % 3600000) / 60000);
             const s = Math.floor((diff % 60000) / 1000);
-            document.getElementById("countdown").innerHTML = `${d} GÜN ${h} SAAT ${m} DAKİKA ${s} SN`;
+            document.getElementById("countdown").innerHTML = `${d} GÜN ${h}:${m}:${s}`;
         }, 1000);
     </script>
 </body>
