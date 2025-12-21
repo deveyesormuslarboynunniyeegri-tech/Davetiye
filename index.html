@@ -4,96 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Eftal & M. Fatih Davetiye</title>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root{ --gold1:#d4af37; --gold2:#f6e27f; --gold3:#b8962e; --bg1:#fbf7f1; --env-main:#cfc6e8; --env-dark:#b7aed9; --env-light:#ebe6f7; }
+        :root{ --gold1:#d4af37; --gold2:#f6e27f; --gold3:#b8962e; --bg1:#fbf7f1; --env-main:#cfc6e8; --env-dark:#b7aed9; --env-light:#ebe6f7; --text:#444; }
         *{margin:0;padding:0;box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-        body{ min-height:100vh; display:flex; justify-content:center; align-items:center; background:var(--bg1); overflow:hidden; perspective: 2000px; font-family: serif; touch-action: none; }
+        body{ min-height:100vh; background:var(--bg1); overflow:hidden; font-family: 'Montserrat', sans-serif; }
 
-        .flower-bg {
-            position: absolute; inset:0;
-            background-image: url("1000023316.jpg");
-            background-size: cover; background-position: center;
-            z-index: 1; pointer-events: none;
-        }
+        /* Arka Plan Çiçekleri */
+        .flower-bg { position: fixed; inset:0; background-image: url("1000023316.jpg"); background-size: cover; background-position: center; z-index: 1; pointer-events: none; opacity: 0.6; }
 
-        .scene { width: 340px; height: 220px; z-index: 10; position: relative; cursor: grab; }
-        .scene:active { cursor: grabbing; }
+        /* Sahne Düzeni */
+        .scene { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; z-index: 10; perspective: 2000px; }
         
-        .envelope {
-            width: 100%; height: 100%; position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.1s linear;
-            transform: rotateX(0deg) rotateY(0deg);
-        }
-
-        .env-face {
-            position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
-
+        /* Zarf Tasarımı */
+        .envelope { width: 340px; height: 220px; position: relative; transform-style: preserve-3d; transition: transform 0.6s ease; cursor: grab; }
+        .env-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
         .env-front { background: var(--env-main); z-index: 2; }
         .env-back { transform: rotateY(180deg); background: var(--env-main); }
-
-        .flap { 
-            position: absolute; inset: 0; background: var(--env-dark); 
-            clip-path: polygon(0 0, 50% 55%, 100% 0); 
-            transform-origin: top; z-index: 6; transition: 0.6s ease;
-        }
+        .flap { position: absolute; inset: 0; background: var(--env-dark); clip-path: polygon(0 0, 50% 55%, 100% 0); transform-origin: top; z-index: 6; transition: 0.6s ease; }
         .waist-l { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(0 0, 0 100%, 100% 50%); z-index: 3; }
         .waist-r { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(100% 0, 0 50%, 100% 100%); z-index: 3; }
         .waist-b { position: absolute; bottom: 0; width: 100%; height: 52%; background: var(--env-main); z-index: 4; border-radius: 0 0 8px 8px; }
+        .seal { position: absolute; top: 50%; left: 50%; width: 65px; height: 65px; transform: translate(-50%, -50%); background: radial-gradient(circle, var(--gold2), var(--gold1), var(--gold3)); border-radius: 50%; z-index: 7; display: flex; justify-content: center; align-items: center; color: white; font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; transition: 0.4s; }
 
-        .seal {
-            position: absolute; top: 50%; left: 50%; width: 65px; height: 65px;
-            transform: translate(-50%, -50%); background: radial-gradient(circle, var(--gold2), var(--gold1), var(--gold3));
-            border-radius: 50%; z-index: 7; display: flex; justify-content: center; align-items: center;
-            color: white; font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.4s;
-            cursor: pointer;
-        }
-
+        /* ANA KART (DAVETİYE İÇERİĞİ) */
         .card {
-            position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px;
-            background: white; border: 1.5px solid var(--gold1); border-radius: 4px;
-            padding: 20px 15px; text-align: center; z-index: 2;
-            transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), height 0.6s ease;
-            overflow-y: auto; /* Kaydırma açık */
-            touch-action: pan-y; /* Sadece dikey kaydırmaya izin ver */
+            position: fixed; top: 100%; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 400px; height: 85vh;
+            background: rgba(255,255,255,0.98); border: 2px solid var(--gold1); border-radius: 15px 15px 0 0;
+            z-index: 100; overflow-y: auto; transition: top 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+            display: none; /* Başlangıçta gizli */
         }
 
-        .card::-webkit-scrollbar { width: 3px; }
-        .card::-webkit-scrollbar-thumb { background: var(--gold1); border-radius: 10px; }
-
-        h2 { font-family: 'Great Vibes', cursive; font-size: 28px; color: var(--gold3); margin-bottom: 10px; }
-        .davetiye-foto { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 1.5px solid var(--gold1); margin-bottom: 15px; }
-        .info { font-size: 14px; line-height: 1.6; color: #444; margin-bottom: 15px; }
-        #countdown { font-size: 12px; font-weight: bold; color: var(--gold3); border-top: 1px solid #f0f0f0; width: 100%; padding-top: 10px; }
-
+        .envelope.open + .card { display: block; top: 10vh; }
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
-        .envelope.open .card { 
-            transform: translateY(-180px); 
-            height: 350px; /* Kartın yüksekliği */
-            z-index: 10; 
-            box-shadow: 0 25px 50px rgba(0,0,0,0.2); 
-        }
+        .envelope.open .seal { opacity: 0; pointer-events: none; }
 
-        .envelope.open .seal { transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; }
+        /* Bölüm Tasarımları */
+        .section { padding: 30px 20px; text-align: center; border-bottom: 1px solid #eee; }
+        h1 { font-family: 'Great Vibes', cursive; font-size: 38px; color: var(--gold3); margin-bottom: 10px; }
+        .date-box { display: flex; justify-content: space-around; margin: 20px 0; font-weight: 600; color: var(--gold3); }
+        .date-item { display: flex; flex-direction: column; }
+        .date-item span { font-size: 24px; }
 
-        .maps-btn {
-            position: absolute; bottom: -100px; left: 50%; transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--gold3), var(--gold1));
-            color: white; text-decoration: none; padding: 12px 35px; border-radius: 25px;
-            font-weight: bold; font-size: 14px; opacity: 0; transition: 0.5s ease;
-            z-index: 25; box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
-        }
-        .envelope.open ~ .maps-btn { opacity: 1; bottom: -110px; }
+        .btn { display: inline-block; padding: 12px 25px; background: var(--gold1); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; margin: 10px 0; font-size: 14px; }
+        
+        .program-line { display: flex; justify-content: space-between; align-items: center; margin: 15px 0; font-size: 14px; border-bottom: 1px dashed #ccc; padding-bottom: 5px; }
+        .program-time { font-weight: bold; color: var(--gold3); }
+
+        .close-btn { position: sticky; top: 10px; right: 10px; float: right; background: #eee; border-radius: 50%; width: 30px; height: 30px; line-height: 30px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div class="flower-bg"></div>
 
-    <div class="scene" id="scene">
+    <div class="scene">
         <div class="envelope" id="envelope">
             <div class="env-face env-front"></div>
             <div class="env-face env-back">
@@ -102,100 +69,87 @@
                 <div class="waist-r"></div>
                 <div class="waist-b"></div>
                 <div class="seal" id="seal">❤</div>
-                <div class="card" id="card">
-                    <h2>Eftal & M. Fatih</h2>
-                    <img src="1000023273.jpg" class="davetiye-foto">
-                    <div class="info">
-                        Bu mutlu günümüzde sizleri de aramızda görmekten mutluluk duyarız.<br><br>
-                        <strong>Tarih: 11 OCAK 2026</strong><br>
-                        <strong>Saat: 19:00</strong><br><br>
-                        Recep Tayyip Erdoğan Blv. No:164<br>
-                        Haliliye / Şanlıurfa<br><br>
-                        Yaşam boyu sürecek beraberliğimizin ilk adımında yanımızda olmanız dileğiyle...
-                    </div>
-                    <div id="countdown"></div>
-                </div>
             </div>
         </div>
-        <a href="https://maps.google.com" target="_blank" class="maps-btn">KONUMU AÇ</a>
+
+        <div class="card" id="card">
+            <div class="close-btn" onclick="closeEnvelope()">×</div>
+            
+            <div class="section">
+                <h1>Eftal & M. Fatih</h1>
+                <p>Aşkımıza tanıklık edeceğiniz bu özel günde mutluluğumuz sizinle daha da büyüyecek.</p>
+                
+                <div class="date-box" id="countdown">
+                    <div class="date-item"><span id="days">00</span>Gün</div>
+                    <div class="date-item"><span id="hours">00</span>Saat</div>
+                    <div class="date-item"><span id="mins">00</span>Dakika</div>
+                    <div class="date-item"><span id="secs">00</span>Saniye</div>
+                </div>
+
+                <div style="font-size: 18px; margin: 20px 0;">
+                    Pazar | <strong>11 Ocak 2026</strong> | 19:00
+                </div>
+
+                <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                    <div><strong>Gelin Ailesi</strong><br>Dilek & M. Adil<br>Mızrakçı</div>
+                    <div><strong>Damat Ailesi</strong><br>Nimet & Mehmet<br>Altundağ</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Davetli.com Düğün Salonu</h3>
+                <p>Recep Tayyip Erdoğan Bulvarı No:164<br>Haliliye / Şanlıurfa</p>
+                <a href="https://maps.google.com" target="_blank" class="btn">YOL TARİFİ AL</a>
+            </div>
+
+            <div class="section">
+                <h3 style="color: var(--gold3); margin-bottom: 15px;">Etkinlik Programı</h3>
+                <div class="program-line"><span>Açılış Konuşması</span> <span class="program-time">18:00</span></div>
+                <div class="program-line"><span>Müzik ve Dans</span> <span class="program-time">19:00</span></div>
+                <div class="program-line"><span>Yemek Servisi</span> <span class="program-time">20:00</span></div>
+                <div class="program-line"><span>Pastanın Kesilmesi</span> <span class="program-time">21:00</span></div>
+            </div>
+
+            <div class="section">
+                <h3>Hatıra Defteri</h3>
+                <p>Bizimle ilgili anılarınızı ve dileklerinizi paylaşabilirsiniz.</p>
+                <a href="#" class="btn">MESAJ BIRAK</a>
+            </div>
+        </div>
     </div>
 
-    <audio id="bgMusic" playsinline webkit-playsinline><source src="stay.mp3" type="audio/mpeg"></audio>
+    <audio id="bgMusic" loop><source src="stay.mp3" type="audio/mpeg"></audio>
 
     <script>
         const envelope = document.getElementById('envelope');
         const seal = document.getElementById('seal');
-        const card = document.getElementById('card');
         const music = document.getElementById('bgMusic');
         
-        let rotY = 0, rotX = 0, startX = 0, startY = 0, isDragging = false, isOpen = false;
+        let rotY = 180; // Başlangıçta arka yüzü (mühürlü tarafı) görsün
 
-        // KARTIN İÇİNDEKİ HAREKETLERİN DIŞARIYA SIZMASINI ENGELLER
-        card.addEventListener('touchstart', (e) => e.stopPropagation());
-        card.addEventListener('touchmove', (e) => e.stopPropagation());
-        card.addEventListener('mousedown', (e) => e.stopPropagation());
+        // İlk yüklemede zarfı döndür
+        envelope.style.transform = `rotateY(${rotY}deg)`;
 
-        const handleStart = (e) => {
-            if (isOpen) return;
-            isDragging = true;
-            startX = (e.pageX || e.touches[0].pageX);
-            startY = (e.pageY || e.touches[0].pageY);
-            envelope.style.transition = 'none';
-        };
-
-        const handleMove = (e) => {
-            if (!isDragging) return;
-            const x = (e.pageX || e.touches[0].pageX);
-            const y = (e.pageY || e.touches[0].pageY);
-            rotY += (x - startX) * 0.5;
-            rotX -= (y - startY) * 0.5;
-            envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-            startX = x; startY = y;
-        };
-
-        const handleEnd = () => {
-            isDragging = false;
-            envelope.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
-            rotY = Math.round(rotY / 180) * 180;
-            rotX = Math.round(rotX / 360) * 360;
-            envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-        };
-
-        window.addEventListener('mousedown', handleStart);
-        window.addEventListener('mousemove', handleMove);
-        window.addEventListener('mouseup', handleEnd);
-        window.addEventListener('touchstart', handleStart, {passive: false});
-        window.addEventListener('touchmove', handleMove, {passive: false});
-        window.addEventListener('touchend', handleEnd);
-
-        seal.addEventListener('click', (e) => {
-            const currentY = Math.abs(rotY % 360);
-            if(!isOpen && (currentY === 180 || currentY === 540)) {
-                envelope.classList.add('open');
-                isOpen = true;
-                music.currentTime = 34;
-                music.play().catch(() => {});
-            }
+        seal.addEventListener('click', () => {
+            envelope.classList.add('open');
+            music.currentTime = 34;
+            music.play().catch(() => {});
         });
 
-        // Kapatmak için kartın en üstüne tıklanabilir
-        card.addEventListener('dblclick', () => {
-            if(isOpen) {
-                envelope.classList.remove('open');
-                isOpen = false;
-                music.pause();
-            }
-        });
+        function closeEnvelope() {
+            envelope.classList.remove('open');
+            music.pause();
+        }
 
+        // Geri sayım mantığı
         const target = new Date("Jan 11, 2026 19:00:00").getTime();
         setInterval(() => {
             const diff = target - new Date().getTime();
             if (diff < 0) return;
-            const d = Math.floor(diff / 86400000);
-            const h = Math.floor((diff % 86400000) / 3600000);
-            const m = Math.floor((diff % 3600000) / 60000);
-            const s = Math.floor((diff % 60000) / 1000);
-            document.getElementById("countdown").innerHTML = `${d} GÜN ${h}:${m}:${s}`;
+            document.getElementById("days").innerText = Math.floor(diff / 86400000);
+            document.getElementById("hours").innerText = Math.floor((diff % 86400000) / 3600000);
+            document.getElementById("mins").innerText = Math.floor((diff % 3600000) / 60000);
+            document.getElementById("secs").innerText = Math.floor((diff % 60000) / 1000);
         }, 1000);
     </script>
 </body>
