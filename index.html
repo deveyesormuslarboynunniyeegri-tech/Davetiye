@@ -18,8 +18,10 @@
         
         .envelope { width: 340px; height: 220px; position: relative; transform-style: preserve-3d; transition: transform 0.8s ease; cursor: grab; }
         .env-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        .env-front { background: var(--env-main); z-index: 2; border: 1px solid rgba(255,255,255,0.2); }
-        .env-back { transform: rotateY(180deg); background: var(--env-main); }
+        
+        /* Zarfın Yüzleri Ayarlandı */
+        .env-front { background: var(--env-main); transform: rotateY(180deg); z-index: 1; } /* Ön yüz artık arkada */
+        .env-back { background: var(--env-main); z-index: 2; } /* Kapaklı yüz artık önde */
         
         .flap { position: absolute; inset: 0; background: var(--env-dark); clip-path: polygon(0 0, 50% 58%, 100% 0); transform-origin: top; z-index: 6; transition: 0.9s cubic-bezier(0.4, 0, 0.2, 1); }
         .waist-l { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(0 0, 0 100%, 100% 50%); z-index: 3; }
@@ -47,14 +49,13 @@
 
         .content-wrap { padding: 45px 20px; text-align: center; overflow-x: hidden; }
         
-        /* DÜZELTİLMİŞ BAŞLIK AYARI */
         h1 { 
             font-family: 'Great Vibes', cursive; 
-            font-size: clamp(32px, 8vw, 42px); /* Ekrana göre otomatik küçülür */
+            font-size: clamp(32px, 8vw, 42px); 
             color: var(--gold3); 
             margin: 20px 0; 
-            letter-spacing: 2px; /* Boşluğu sığması için optimize ettim */
-            white-space: nowrap; /* ASLA ALT SATIRA DÜŞMEZ */
+            letter-spacing: 2px; 
+            white-space: nowrap; 
             display: block;
             width: 100%;
         }
@@ -155,7 +156,8 @@
         const music = document.getElementById('bgMusic');
         const body = document.body;
         
-        let rotY = 180, rotX = 0, startX = 0, startY = 0, isDragging = false, isOpen = false;
+        // BAŞLANGIÇ AÇISI 0 OLDU (Arka yüz/Mühürlü yüz görünür)
+        let rotY = 0, rotX = 0, startX = 0, startY = 0, isDragging = false, isOpen = false;
 
         envelope.style.transform = `rotateY(${rotY}deg) rotateX(${rotX}deg)`;
 
