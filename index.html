@@ -8,28 +8,24 @@
     <style>
         :root{ 
             --gold1:#d4af37; --gold2:#f6e27f; --gold3:#b8962e; 
-            --bg1:#fbf7f1; 
+            --bg-dark:#1a1a2e; /* Gece mavisi/mor tonu */
             --env-main:#cfc6e8; --env-dark:#b7aed9; --env-light:#ebe6f7; 
             --text:#555; 
         }
         *{margin:0;padding:0;box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
         
         body{ 
-            min-height:100vh; background:var(--bg1); overflow:hidden; 
-            font-family: 'Montserrat', sans-serif; color: var(--text); 
-            transition: background 1.5s ease; 
+            min-height:100vh; 
+            background: radial-gradient(circle at center, #2e1a47 0%, #1a1a2e 100%); 
+            overflow:hidden; 
+            font-family: 'Montserrat', sans-serif; 
         }
 
-        body.darken { background: #1a1a1a !important; }
-        
-        .flower-bg { 
-            position: fixed; inset:0; 
-            background-image: url("1000023316.jpg"); 
-            background-size: cover; background-position: center; 
-            z-index: 1; pointer-events: none; opacity: 0.4; 
-            transition: opacity 2s ease; 
+        /* Yıldız/Işıltı Efekti Katmanı */
+        #particles-js {
+            position: fixed; inset: 0; z-index: 1;
+            background: transparent;
         }
-        body.darken .flower-bg { opacity: 0.05; }
 
         .scene { 
             position: relative; width: 100vw; height: 100vh; 
@@ -38,157 +34,102 @@
         }
         
         .envelope { 
-            width: 340px; height: 230px; position: relative; 
-            transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); 
+            width: 320px; height: 210px; position: relative; 
+            transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
             cursor: grab; touch-action: none;
         }
 
-        /* Zarf Yüzleri */
-        .env-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .env-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
         .env-front { 
             background: var(--env-main); z-index: 2; transform: rotateY(0deg); 
             display: flex; justify-content: center; align-items: center; 
         }
-        .env-front::after { content: "ÇEVİRİNİZ ⟲"; font-size: 10px; color: rgba(255,255,255,0.7); letter-spacing: 3px; font-weight: 600; }
+        .env-front::after { content: "ÇEVİRİNİZ ⟲"; font-size: 10px; color: #fff; letter-spacing: 3px; opacity: 0.7; }
 
         .env-back { background: var(--env-main); transform: rotateY(180deg); z-index: 1; } 
         
-        /* Zarf Kanatları */
         .flap { 
             position: absolute; inset: 0; background: var(--env-dark); 
             clip-path: polygon(0 0, 50% 55%, 100% 0); 
             transform-origin: top; z-index: 6; 
-            transition: transform 0.8s ease, z-index 0.4s; 
+            transition: transform 0.8s ease; 
         }
         .waist-l { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(0 0, 0 100%, 100% 50%); z-index: 3; }
         .waist-r { position: absolute; inset: 0; background: var(--env-light); clip-path: polygon(100% 0, 0 50%, 100% 100%); z-index: 3; }
-        .waist-b { position: absolute; bottom: 0; width: 100%; height: 53%; background: var(--env-main); z-index: 4; border-radius: 0 0 8px 8px; }
+        .waist-b { position: absolute; bottom: 0; width: 100%; height: 53%; background: var(--env-main); z-index: 4; border-radius: 0 0 12px 12px; }
         
-        /* Mühür */
         .seal { 
-            position: absolute; top: 50%; left: 50%; width: 75px; height: 75px; 
+            position: absolute; top: 50%; left: 50%; width: 70px; height: 70px; 
             transform: translate(-50%, -50%); 
             background: radial-gradient(circle at 30% 30%, var(--gold2), var(--gold3)); 
             border-radius: 50%; z-index: 7; 
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
-            box-shadow: 0 6px 15px rgba(0,0,0,0.3), inset 0 0 10px rgba(0,0,0,0.1); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4); 
             cursor: pointer; border: 1px solid rgba(255,255,255,0.4); 
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
-        .seal span { 
-            font-family: 'Great Vibes', cursive; color: white; 
-            font-size: 22px; line-height: 1; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); 
-        }
-        .seal i { font-size: 10px; color: rgba(255,255,255,0.8); font-style: normal; margin-top: 2px; }
+        .seal span { font-family: 'Great Vibes', cursive; color: white; font-size: 20px; }
 
-        /* Davetiye Kartı */
         .card {
             position: fixed; top: 120%; left: 50%; transform: translateX(-50%);
-            width: 92%; max-width: 420px; height: 85vh;
+            width: 92%; max-width: 400px; height: 85vh;
             background: #fff; border-radius: 20px 20px 0 0;
             z-index: 100; overflow-y: auto; 
-            transition: top 1.8s cubic-bezier(0.19, 1, 0.22, 1), opacity 1s;
-            opacity: 0;
-            box-shadow: 0 -15px 50px rgba(0,0,0,0.4);
+            transition: top 1.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 1s;
+            opacity: 0; box-shadow: 0 -15px 50px rgba(0,0,0,0.6);
             padding-bottom: 40px;
-            -webkit-overflow-scrolling: touch;
         }
 
-        /* Açılma Animasyon Durumları */
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
-        .envelope.open .seal { opacity: 0; transform: translate(-50%, -50%) scale(0); pointer-events: none; }
+        .envelope.open .seal { opacity: 0; transform: translate(-50%, -50%) scale(0); }
         .envelope.open + .card { opacity: 1; top: 8vh; }
 
-        /* Kart İçeriği */
-        .content-wrap { padding: 40px 24px; text-align: center; }
+        .content-wrap { padding: 40px 25px; text-align: center; }
         h1 { font-family: 'Great Vibes', cursive; font-size: 38px; color: var(--gold3); margin: 15px 0; }
-        .intro-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 14px; margin-bottom: 30px; color: #777; }
-        
-        .countdown-container { 
-            display: flex; justify-content: space-around; 
-            margin: 30px 0; padding: 20px 0; 
-            border-top: 1px solid #eee; border-bottom: 1px solid #eee; 
-        }
-        .cd-item span { display: block; font-size: 28px; font-weight: 300; color: var(--gold3); }
-        .cd-label { font-size: 9px; letter-spacing: 1px; color: #999; margin-top: 5px; }
-
-        .main-date { font-size: 18px; letter-spacing: 4px; margin: 25px 0; font-weight: 300; color: #444; }
-        
-        .family-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 30px 0; font-size: 13px; }
-        .family-title { font-weight: 600; color: var(--gold3); margin-bottom: 8px; display: block; font-size: 11px; }
-
-        .btn { 
-            display: inline-block; width: 90%; padding: 15px; 
-            border: 1px solid var(--gold1); color: var(--gold3); 
-            text-decoration: none; border-radius: 50px; 
-            font-size: 11px; font-weight: 600; letter-spacing: 2px; 
-            transition: 0.3s; margin-top: 10px;
-        }
-        .btn:active { background: var(--gold1); color: white; }
-
-        .close-btn { 
-            position: sticky; top: 15px; left: 85%; width: 35px; height: 35px; 
-            background: #fff; border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; 
-            z-index: 101; color: #ccc; font-size: 20px;
-        }
-        
-        .confetti { position: fixed; width: 6px; height: 6px; top: -10px; z-index: 150; animation: fall linear forwards; }
-        @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
+        .countdown-container { display: flex; justify-content: space-around; margin: 25px 0; padding: 15px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
+        .cd-item span { display: block; font-size: 26px; color: var(--gold3); }
+        .cd-label { font-size: 9px; color: #999; }
+        .btn { display: inline-block; width: 100%; padding: 15px; border: 1px solid var(--gold1); color: var(--gold3); text-decoration: none; border-radius: 50px; font-size: 11px; font-weight: 600; letter-spacing: 2px; }
+        .close-btn { position: sticky; top: 15px; left: 85%; width: 35px; height: 35px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; color: #ccc; }
     </style>
 </head>
 <body>
 
-    <div class="flower-bg"></div>
+    <canvas id="stars"></canvas>
 
     <div class="scene">
         <div class="envelope" id="envelope">
             <div class="env-face env-front"></div>
-            
             <div class="env-face env-back">
                 <div class="flap"></div>
                 <div class="waist-l"></div>
                 <div class="waist-r"></div>
                 <div class="waist-b"></div>
-                <div class="seal" id="seal">
-                    <span>E & F</span>
-                    <i>tıkla</i>
-                </div>
+                <div class="seal" id="seal"><span>E & F</span></div>
             </div>
         </div>
 
         <div class="card" id="card">
             <div class="close-btn" onclick="closeEnvelope()">×</div>
             <div class="content-wrap">
-                <img src="1000023273.jpg" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold1); padding: 4px; margin-bottom: 10px;">
+                <img src="1000023273.jpg" style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--gold1); margin-bottom: 10px; object-fit: cover;">
                 <h1>Eftal & M. Fatih</h1>
-                <p class="intro-text">Aşkımıza tanıklık edeceğiniz bu özel günde,<br>mutluluğumuz sizinle daha da büyüyecek.</p>
+                <p style="font-style: italic; color:#777; font-size:14px;">Mutluluğumuza davetlisiniz.</p>
                 
                 <div class="countdown-container">
                     <div class="cd-item"><span id="days">00</span><div class="cd-label">GÜN</div></div>
                     <div class="cd-item"><span id="hours">00</span><div class="cd-label">SAAT</div></div>
                     <div class="cd-item"><span id="mins">00</span><div class="cd-label">DAKİKA</div></div>
-                    <div class="cd-item"><span id="secs">00</span><div class="cd-label">SANİYE</div></div>
                 </div>
 
-                <div class="main-date">11 OCAK 2026</div>
+                <div style="font-size: 18px; letter-spacing: 3px; margin: 20px 0;">11 OCAK 2026</div>
 
-                <div class="family-grid">
-                    <div><span class="family-title">GELİNİN AİLESİ</span>Dilek & M. Adil<br>Mızrakçı</div>
-                    <div><span class="family-title">DAMADIN AİLESİ</span>Nimet & Mehmet<br>Altundağ</div>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 30px;">
+                    <div><b style="color:var(--gold3)">GELİN AİLESİ</b><br>Mızrakçı Ailesi</div>
+                    <div><b style="color:var(--gold3)">DAMAT AİLESİ</b><br>Altundağ Ailesi</div>
                 </div>
 
-                <div style="width: 40px; height: 1px; background: var(--gold1); margin: 25px auto; opacity: 0.3;"></div>
-
-                <div class="location-info">
-                    <h3 style="color: var(--gold3); margin-bottom: 8px; font-weight: 400; font-size: 16px;">DÜĞÜN SALONU</h3>
-                    <p style="font-size: 13px; margin-bottom: 20px; line-height: 1.6; color: #888;">
-                        Recep Tayyip Erdoğan Blv. No:164<br>
-                        Haliliye / Şanlıurfa
-                    </p>
-                    <a href="https://maps.app.goo.gl/XYZ" target="_blank" class="btn">KONUMU GÖRÜNTÜLE</a>
-                </div>
+                <a href="https://maps.app.goo.gl/xxx" target="_blank" class="btn">KONUMU GÖRÜNTÜLE</a>
             </div>
         </div>
     </div>
@@ -196,100 +137,87 @@
     <audio id="bgMusic" loop><source src="stay.mp3" type="audio/mpeg"></audio>
 
     <script>
+        // Yıldız Efekti Scripti
+        const canvas = document.getElementById('stars');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function initStars() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            for(let i=0; i<100; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2,
+                    speed: Math.random() * 0.5 + 0.2
+                });
+            }
+        }
+
+        function drawStars() {
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            ctx.fillStyle = "white";
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+                ctx.fill();
+                p.y -= p.speed;
+                if(p.y < 0) p.y = canvas.height;
+            });
+            requestAnimationFrame(drawStars);
+        }
+        initStars(); drawStars();
+
+        // Zarf Kontrolleri
         const envelope = document.getElementById('envelope');
         const seal = document.getElementById('seal');
         const music = document.getElementById('bgMusic');
-        const body = document.body;
-        
-        let rotY = 0, rotX = 0, startX = 0, startY = 0, isDragging = false, isOpen = false;
+        let rotY = 0, rotX = 0, startX = 0, isDragging = false, isOpen = false;
 
         const handleStart = (e) => {
             if (isOpen) return;
             isDragging = true;
             startX = (e.pageX || e.touches[0].pageX);
-            startY = (e.pageY || e.touches[0].pageY);
             envelope.style.transition = 'none';
         };
 
         const handleMove = (e) => {
             if (!isDragging) return;
             const x = (e.pageX || e.touches[0].pageX);
-            const y = (e.pageY || e.touches[0].pageY);
             rotY += (x - startX) * 0.6;
-            rotX -= (y - startY) * 0.4;
-            // Aşırı dikey dönmeyi sınırla
-            rotX = Math.max(-40, Math.min(40, rotX));
-            envelope.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-            startX = x; startY = y;
+            envelope.style.transform = `rotateY(${rotY}deg)`;
+            startX = x;
         };
 
         const handleEnd = () => {
-            if (!isDragging) return;
             isDragging = false;
-            envelope.style.transition = 'transform 0.7s cubic-bezier(0.4, 0, 0.2, 1)';
+            envelope.style.transition = 'transform 0.7s ease';
             rotY = Math.round(rotY / 180) * 180;
-            rotX = 0;
-            envelope.style.transform = `rotateX(0deg) rotateY(${rotY}deg)`;
+            envelope.style.transform = `rotateY(${rotY}deg)`;
         };
 
         window.addEventListener('mousedown', handleStart);
         window.addEventListener('mousemove', handleMove);
         window.addEventListener('mouseup', handleEnd);
-        window.addEventListener('touchstart', handleStart, {passive: false});
-        window.addEventListener('touchmove', handleMove, {passive: false});
+        window.addEventListener('touchstart', handleStart);
+        window.addEventListener('touchmove', handleMove);
         window.addEventListener('touchend', handleEnd);
 
         seal.addEventListener('click', (e) => {
             e.stopPropagation();
-            const normalizedRotY = Math.abs(rotY % 360);
-            // Zarfın arkası dönükken (180 derece civarı) tıklanabilir
-            if(!isOpen && (normalizedRotY >= 160 && normalizedRotY <= 200)) {
+            if(!isOpen && Math.abs(rotY % 360) === 180) {
                 isOpen = true;
                 envelope.classList.add('open');
-                body.classList.add('darken');
-                
-                // Müzik ve Konfeti
-                music.currentTime = 34;
-                music.play().catch(() => console.log("Müzik için etkileşim gerekiyor"));
-                
-                setTimeout(createConfetti, 800);
+                music.play().catch(() => {});
             }
         });
 
-        function createConfetti() {
-            for(let i=0; i<50; i++) {
-                const conf = document.createElement('div');
-                conf.className = 'confetti';
-                conf.style.left = Math.random() * 100 + 'vw';
-                conf.style.backgroundColor = ['#d4af37', '#f6e27f', '#ffffff', '#cfc6e8'][Math.floor(Math.random() * 4)];
-                conf.style.width = Math.random() * 8 + 4 + 'px';
-                conf.style.height = conf.style.width;
-                conf.style.animationDuration = Math.random() * 2 + 3 + 's';
-                document.body.appendChild(conf);
-                setTimeout(() => conf.remove(), 5000);
-            }
-        }
-
         function closeEnvelope() {
             envelope.classList.remove('open');
-            body.classList.remove('darken');
             isOpen = false;
             music.pause();
         }
-
-        // Sayaç
-        const target = new Date("Jan 11, 2026 19:00:00").getTime();
-        function updateTimer() {
-            const now = new Date().getTime();
-            const diff = target - now;
-            if (diff < 0) return;
-            document.getElementById("days").innerText = String(Math.floor(diff / 86400000)).padStart(2, '0');
-            document.getElementById("hours").innerText = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
-            document.getElementById("mins").innerText = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
-            document.getElementById("secs").innerText = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
-        }
-        setInterval(updateTimer, 1000);
-        updateTimer();
     </script>
 </body>
 </html>
