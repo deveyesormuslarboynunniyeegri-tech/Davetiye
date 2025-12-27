@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Eftal & M. Fatih - Premium Davetiye</title>
+    <title>Eftal & M. Fatih - Özel Davetiye</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;600&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
     <style>
         :root {
             --gold: linear-gradient(135deg, #b8962e 0%, #f6e27f 50%, #b8962e 100%);
-            --env-color: #cfc6e8; /* Zarf Rengi */
+            --env-color: #cfc6e8;
             --env-dark: #b7aed9;
-            /* İstediğin Açık ve Lüks Arka Plan */
-            --bg-color: radial-gradient(circle at center, #ffffff 0%, #fdfbf7 40%, #f5eee0 100%);
+            /* Arka plan: Beyazdan yumuşak bir mora ve şampanya rengine geçiş */
+            --bg-color: radial-gradient(circle at center, #ffffff 0%, #fdfaff 40%, #f2ebf7 70%, #efe5d5 100%);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -24,7 +24,7 @@
             touch-action: none; 
         }
 
-        /* Arka Plandaki Altın Tozları ve Parıltılar */
+        /* Arka Plandaki Mor ve Altın Parıltılar */
         #bgCanvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
 
         .scene { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; perspective: 2500px; z-index: 10; }
@@ -38,10 +38,10 @@
 
         .face { 
             position: absolute; inset: 0; backface-visibility: hidden; border-radius: 12px; 
-            box-shadow: 0 25px 50px rgba(184, 150, 46, 0.2); border: 2.5px solid #b8962e;
+            box-shadow: 0 25px 60px rgba(106, 83, 160, 0.2); border: 2.5px solid #b8962e;
         }
 
-        /* ÖN YÜZ: ALTIN VARAKLAR VE ÇERÇEVE */
+        /* ÖN YÜZ */
         .front { 
             background: var(--env-color); z-index: 2; transform: rotateY(0deg); 
             display: flex; justify-content: center; align-items: center;
@@ -57,10 +57,9 @@
         .gold-title { 
             background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             font-family: 'Playfair Display', serif; font-style: italic; font-size: 38px; font-weight: 700; letter-spacing: 2px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
 
-        /* ARKA YÜZ: MÜHÜRLÜ KISIM */
+        /* ARKA YÜZ */
         .back { background: var(--env-color); transform: rotateY(180deg); z-index: 1; overflow: hidden; }
         .flap { 
             position: absolute; inset: 0; background: var(--env-dark); clip-path: polygon(0 0, 50% 60%, 100% 0); 
@@ -70,18 +69,18 @@
         .seal { 
             position: absolute; top: 52%; left: 50%; width: 85px; height: 85px; transform: translate(-50%, -50%); 
             background: var(--gold); border-radius: 50%; z-index: 9; display: flex; justify-content: center; align-items: center; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3); cursor: pointer; border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); cursor: pointer;
         }
         .seal span { font-family: 'Great Vibes', cursive; color: #4b3a0a; font-size: 28px; font-weight: bold; }
 
-        /* KART: İÇERİDEN ÇIKAN KISIM */
+        /* KART */
         .card {
             position: fixed; top: 120%; left: 50%; transform: translateX(-50%);
             width: 95%; max-width: 440px; height: 85vh;
             background: #fff; border-radius: 30px 30px 0 0;
             z-index: 100; overflow-y: auto; 
             transition: top 1.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s;
-            opacity: 0; box-shadow: 0 -25px 80px rgba(0,0,0,0.15);
+            opacity: 0; box-shadow: 0 -25px 80px rgba(106, 83, 160, 0.1);
         }
 
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
@@ -92,10 +91,10 @@
         .couple-img { width: 160px; height: 160px; border-radius: 50%; border: 4px solid #b8962e; padding: 5px; margin-bottom: 15px; object-fit: cover; }
         .card-inner h1 { font-family: 'Great Vibes', cursive; font-size: 46px; color: #b8962e; margin: 10px 0; }
         
-        .timer { display: flex; justify-content: space-around; margin: 25px 0; border-top: 1px solid #f2f2f2; border-bottom: 1px solid #f2f2f2; padding: 20px 0; }
+        .timer { display: flex; justify-content: space-around; margin: 25px 0; border-top: 1px solid #f5f5f5; border-bottom: 1px solid #f5f5f5; padding: 20px 0; }
         .timer span { display: block; font-size: 30px; color: #b8962e; font-weight: 200; }
 
-        .btn-map { display: block; margin-top: 25px; padding: 18px; background: var(--gold); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 13px; letter-spacing: 1px; box-shadow: 0 10px 20px rgba(184,150,46,0.2); }
+        .btn-map { display: block; margin-top: 25px; padding: 18px; background: var(--gold); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 13px; box-shadow: 0 10px 20px rgba(184,150,46,0.2); }
         .close { position: sticky; top: 15px; left: 85%; width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 101; box-shadow: 0 5px 15px rgba(0,0,0,0.1); color: #ddd; font-size: 32px; }
     </style>
 </head>
@@ -127,7 +126,7 @@
             <div class="card-inner">
                 <img src="1000023273.jpg" class="couple-img">
                 <h1>Eftal & M. Fatih</h1>
-                <p style="font-style: italic; color: #777; line-height: 1.6; font-size: 15px;">"Sizleri de aramızda görmekten mutluluk duyacağız."</p>
+                <p style="font-style: italic; color: #777; line-height: 1.6; font-size: 15px;">"Bu mutlu günümüzde sizleri de aramızda görmekten mutluluk duyacağız."</p>
                 
                 <div class="timer">
                     <div><span id="d">00</span><small>GÜN</small></div>
@@ -150,20 +149,21 @@
     <audio id="music" loop><source src="stay.mp3" type="audio/mpeg"></audio>
 
     <script>
-        // Arka Plan Animasyonu (Işık Süzmeleri ve Altın Parıltılar)
         const cvs = document.getElementById('bgCanvas');
         const ctx = cvs.getContext('2d');
         let pts = [];
         function resize() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; }
         window.onresize = resize; resize();
         
+        // Mor ve Altın parıltılar karması
         for(let i=0; i<60; i++) {
             pts.push({
                 x: Math.random()*cvs.width, 
                 y: Math.random()*cvs.height, 
-                r: Math.random()*2.5, 
-                v: Math.random()*0.3+0.1,
-                op: Math.random()*0.5 + 0.2
+                r: Math.random()*2, 
+                v: Math.random()*0.2+0.1,
+                c: Math.random() > 0.6 ? "#b8962e" : "#cbb8f0", // Altın veya Lila parıltı
+                op: Math.random()*0.4 + 0.1
             });
         }
 
@@ -171,7 +171,7 @@
             ctx.clearRect(0,0,cvs.width,cvs.height);
             pts.forEach(p => {
                 ctx.beginPath();
-                ctx.fillStyle = "#b8962e";
+                ctx.fillStyle = p.c;
                 ctx.globalAlpha = p.op;
                 ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
                 ctx.fill();
@@ -182,7 +182,7 @@
         }
         draw();
 
-        // 3D HER YÖNE DÖNÜŞ KONTROLÜ
+        // 3D HER YÖNE DÖNÜŞ
         const env = document.getElementById('envelope');
         const seal = document.getElementById('seal');
         const music = document.getElementById('music');
@@ -211,20 +211,18 @@
         window.addEventListener('mousedown', onStart); window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onEnd);
         window.addEventListener('touchstart', onStart); window.addEventListener('touchmove', onMove); window.addEventListener('touchend', onEnd);
 
-        // Zarfı Açma Mekanizması
         seal.addEventListener('click', (e) => {
             e.stopPropagation();
             const normalizedY = Math.abs(rotY % 360);
             if (normalizedY > 130 && normalizedY < 230) {
                 env.classList.add('open');
                 music.currentTime = 34;
-                music.play().catch(err => console.log("Müzik çalması için bir kez dokunun."));
+                music.play().catch(e => {});
             }
         });
 
         function closeEnv() { env.classList.remove('open'); music.pause(); }
 
-        // Geri Sayım
         const target = new Date("Jan 11, 2026 19:00:00").getTime();
         setInterval(() => {
             const diff = target - Date.now();
