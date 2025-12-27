@@ -8,10 +8,11 @@
     <style>
         :root {
             --gold: linear-gradient(135deg, #b8962e 0%, #f6e27f 50%, #b8962e 100%);
-            --env-color: #cfc6e8;
-            --env-dark: #b7aed9;
-            /* ARKA PLAN: Daha yoğun ve asil mor geçişi */
-            --bg-color: radial-gradient(circle at center, #4b307d 0%, #2a1b4d 50%, #160d29 100%);
+            /* ZARF: Daha ferah inci beyazı/lila tonu */
+            --env-color: #f3f0ff; 
+            --env-dark: #e6e0f8;
+            /* ARKA PLAN: Beyaz ve yumuşak mor geçişi */
+            --bg-color: radial-gradient(circle at center, #ffffff 0%, #f7f4ff 40%, #e5deff 100%);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -24,12 +25,10 @@
             touch-action: none; 
         }
 
-        /* Arka Plandaki Yoğun Altın ve Mor Işıltılar */
         #bgCanvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
 
         .scene { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; perspective: 2500px; z-index: 10; }
 
-        /* 3D ZARF - HER YÖNE DÖNÜŞ */
         .envelope { 
             width: 350px; height: 235px; position: relative; 
             transform-style: preserve-3d; will-change: transform; cursor: grab;
@@ -37,10 +36,9 @@
 
         .face { 
             position: absolute; inset: 0; backface-visibility: hidden; border-radius: 12px; 
-            box-shadow: 0 40px 100px rgba(0,0,0,0.6); border: 2.5px solid #b8962e;
+            box-shadow: 0 30px 60px rgba(142, 116, 201, 0.2); border: 2.5px solid #d4af37;
         }
 
-        /* ÖN YÜZ: ALTIN VARAKLI DAVETLİSİNİZ */
         .front { 
             background: var(--env-color); z-index: 2; transform: rotateY(0deg); 
             display: flex; justify-content: center; align-items: center;
@@ -56,31 +54,29 @@
         .gold-title { 
             background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             font-family: 'Playfair Display', serif; font-style: italic; font-size: 38px; font-weight: 700; letter-spacing: 2px;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
         }
 
-        /* ARKA YÜZ: MÜHÜRLÜ KISIM */
         .back { background: var(--env-color); transform: rotateY(180deg); z-index: 1; overflow: hidden; }
         .flap { 
             position: absolute; inset: 0; background: var(--env-dark); clip-path: polygon(0 0, 50% 60%, 100% 0); 
             transform-origin: top; z-index: 8; transition: transform 0.8s ease; border-top: 4px solid #f6e27f;
         }
-        .pocket-bottom { position: absolute; bottom: 0; width: 100%; height: 55%; background: var(--env-color); z-index: 6; border-top: 2px solid rgba(184, 150, 46, 0.4); }
+        .pocket-bottom { position: absolute; bottom: 0; width: 100%; height: 55%; background: var(--env-color); z-index: 6; border-top: 1px solid rgba(184, 150, 46, 0.2); }
         .seal { 
             position: absolute; top: 52%; left: 50%; width: 85px; height: 85px; transform: translate(-50%, -50%); 
             background: var(--gold); border-radius: 50%; z-index: 9; display: flex; justify-content: center; align-items: center; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15); cursor: pointer;
         }
         .seal span { font-family: 'Great Vibes', cursive; color: #4b3a0a; font-size: 28px; font-weight: bold; }
 
-        /* KART: İÇERİDEN ÇIKAN */
         .card {
             position: fixed; top: 120%; left: 50%; transform: translateX(-50%);
             width: 95%; max-width: 440px; height: 85vh;
             background: #fff; border-radius: 30px 30px 0 0;
             z-index: 100; overflow-y: auto; 
             transition: top 1.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s;
-            opacity: 0; box-shadow: 0 -30px 100px rgba(0,0,0,0.8);
+            opacity: 0; box-shadow: 0 -30px 100px rgba(0,0,0,0.2);
         }
 
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
@@ -94,8 +90,8 @@
         .timer { display: flex; justify-content: space-around; margin: 25px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 20px 0; }
         .timer span { display: block; font-size: 30px; color: #b8962e; font-weight: 300; }
 
-        .btn-map { display: block; margin-top: 25px; padding: 18px; background: var(--gold); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 13px; box-shadow: 0 10px 25px rgba(184,150,46,0.3); }
-        .close { position: sticky; top: 15px; left: 85%; width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 101; box-shadow: 0 5px 20px rgba(0,0,0,0.2); color: #999; font-size: 32px; }
+        .btn-map { display: block; margin-top: 25px; padding: 18px; background: var(--gold); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 13px; box-shadow: 0 10px 25px rgba(184,150,46,0.2); }
+        .close { position: sticky; top: 15px; left: 85%; width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 101; box-shadow: 0 5px 20px rgba(0,0,0,0.1); color: #999; font-size: 32px; }
     </style>
 </head>
 <body>
@@ -159,10 +155,11 @@
             pts.push({
                 x: Math.random()*cvs.width, 
                 y: Math.random()*cvs.height, 
-                r: Math.random()*2, 
+                r: Math.random()*2.5, 
                 v: Math.random()*0.3+0.1,
-                c: Math.random() > 0.4 ? "#f6e27f" : "#a288e3",
-                op: Math.random()*0.6 + 0.2
+                // Parçacık renkleri: Altın ve Lavanta moru
+                c: Math.random() > 0.5 ? "#b8962e" : "#8e74c9",
+                op: Math.random()*0.5 + 0.3
             });
         }
 
@@ -212,7 +209,8 @@
         seal.addEventListener('click', (e) => {
             e.stopPropagation();
             const normalizedY = Math.abs(rotY % 360);
-            if (normalizedY > 130 && normalizedY < 230) {
+            // Zarfın arkası dönükken (mühür görünürken) tıklanabilir
+            if ((normalizedY > 130 && normalizedY < 230) || (normalizedY > -230 && normalizedY < -130)) {
                 env.classList.add('open');
                 music.currentTime = 34;
                 music.play().catch(e => {});
