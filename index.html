@@ -8,7 +8,6 @@
     <style>
         :root{ 
             --gold1:#d4af37; --gold2:#f6e27f; --gold3:#b8962e; 
-            --bg-dark:#1a1a2e; /* Gece mavisi/mor tonu */
             --env-main:#cfc6e8; --env-dark:#b7aed9; --env-light:#ebe6f7; 
             --text:#555; 
         }
@@ -16,17 +15,15 @@
         
         body{ 
             min-height:100vh; 
-            background: radial-gradient(circle at center, #2e1a47 0%, #1a1a2e 100%); 
+            background: radial-gradient(circle at center, #2e1a47 0%, #111 100%); 
             overflow:hidden; 
             font-family: 'Montserrat', sans-serif; 
         }
 
-        /* Yıldız/Işıltı Efekti Katmanı */
-        #particles-js {
-            position: fixed; inset: 0; z-index: 1;
-            background: transparent;
-        }
+        /* Yıldızlar arka planda kalsın diye z-index: 1 */
+        #stars { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
 
+        /* Sahne ve Zarf en önde (z-index: 10) */
         .scene { 
             position: relative; width: 100vw; height: 100vh; 
             display: flex; justify-content: center; align-items: center; 
@@ -34,17 +31,18 @@
         }
         
         .envelope { 
-            width: 320px; height: 210px; position: relative; 
+            width: 330px; height: 220px; position: relative; 
             transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
-            cursor: grab; touch-action: none;
+            cursor: grab; touch-action: none; transform: rotateY(0deg);
         }
 
-        .env-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        .env-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 12px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        
         .env-front { 
             background: var(--env-main); z-index: 2; transform: rotateY(0deg); 
             display: flex; justify-content: center; align-items: center; 
         }
-        .env-front::after { content: "ÇEVİRİNİZ ⟲"; font-size: 10px; color: #fff; letter-spacing: 3px; opacity: 0.7; }
+        .env-front::after { content: "ÇEVİRİNİZ ⟲"; font-size: 11px; color: white; letter-spacing: 3px; font-weight: 600; opacity: 0.8; }
 
         .env-back { background: var(--env-main); transform: rotateY(180deg); z-index: 1; } 
         
@@ -59,38 +57,34 @@
         .waist-b { position: absolute; bottom: 0; width: 100%; height: 53%; background: var(--env-main); z-index: 4; border-radius: 0 0 12px 12px; }
         
         .seal { 
-            position: absolute; top: 50%; left: 50%; width: 70px; height: 70px; 
+            position: absolute; top: 50%; left: 50%; width: 75px; height: 75px; 
             transform: translate(-50%, -50%); 
             background: radial-gradient(circle at 30% 30%, var(--gold2), var(--gold3)); 
             border-radius: 50%; z-index: 7; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            display: flex; justify-content: center; align-items: center; 
             box-shadow: 0 5px 15px rgba(0,0,0,0.4); 
             cursor: pointer; border: 1px solid rgba(255,255,255,0.4); 
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
-        .seal span { font-family: 'Great Vibes', cursive; color: white; font-size: 20px; }
+        .seal span { font-family: 'Great Vibes', cursive; color: white; font-size: 22px; pointer-events: none; }
 
         .card {
             position: fixed; top: 120%; left: 50%; transform: translateX(-50%);
-            width: 92%; max-width: 400px; height: 85vh;
-            background: #fff; border-radius: 20px 20px 0 0;
+            width: 95%; max-width: 420px; height: 85vh;
+            background: #fff; border-radius: 25px 25px 0 0;
             z-index: 100; overflow-y: auto; 
-            transition: top 1.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 1s;
-            opacity: 0; box-shadow: 0 -15px 50px rgba(0,0,0,0.6);
+            transition: top 1.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.8s;
+            opacity: 0; box-shadow: 0 -15px 60px rgba(0,0,0,0.8);
             padding-bottom: 40px;
         }
 
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
-        .envelope.open .seal { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-        .envelope.open + .card { opacity: 1; top: 8vh; }
+        .envelope.open .seal { opacity: 0; transform: translate(-50%, -50%) scale(0); pointer-events: none; }
+        .envelope.open + .card { opacity: 1; top: 10vh; }
 
         .content-wrap { padding: 40px 25px; text-align: center; }
-        h1 { font-family: 'Great Vibes', cursive; font-size: 38px; color: var(--gold3); margin: 15px 0; }
-        .countdown-container { display: flex; justify-content: space-around; margin: 25px 0; padding: 15px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; }
-        .cd-item span { display: block; font-size: 26px; color: var(--gold3); }
-        .cd-label { font-size: 9px; color: #999; }
-        .btn { display: inline-block; width: 100%; padding: 15px; border: 1px solid var(--gold1); color: var(--gold3); text-decoration: none; border-radius: 50px; font-size: 11px; font-weight: 600; letter-spacing: 2px; }
-        .close-btn { position: sticky; top: 15px; left: 85%; width: 35px; height: 35px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; color: #ccc; }
+        h1 { font-family: 'Great Vibes', cursive; font-size: 42px; color: var(--gold3); margin-bottom: 15px; }
+        .btn { display: inline-block; width: 100%; padding: 16px; border: 1px solid var(--gold1); color: var(--gold3); text-decoration: none; border-radius: 50px; font-weight: 600; letter-spacing: 2px; font-size: 12px; }
+        .close-btn { position: sticky; top: 15px; left: 88%; width: 35px; height: 35px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; color: #999; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -112,24 +106,24 @@
         <div class="card" id="card">
             <div class="close-btn" onclick="closeEnvelope()">×</div>
             <div class="content-wrap">
-                <img src="1000023273.jpg" style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid var(--gold1); margin-bottom: 10px; object-fit: cover;">
+                <img src="1000023273.jpg" style="width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--gold1); padding: 5px; margin-bottom: 15px; object-fit: cover;">
                 <h1>Eftal & M. Fatih</h1>
-                <p style="font-style: italic; color:#777; font-size:14px;">Mutluluğumuza davetlisiniz.</p>
+                <p style="font-family: 'Playfair Display', serif; font-style: italic; color: #777; margin-bottom: 30px;">Mutluluğumuza davetlisiniz.</p>
                 
-                <div class="countdown-container">
-                    <div class="cd-item"><span id="days">00</span><div class="cd-label">GÜN</div></div>
-                    <div class="cd-item"><span id="hours">00</span><div class="cd-label">SAAT</div></div>
-                    <div class="cd-item"><span id="mins">00</span><div class="cd-label">DAKİKA</div></div>
+                <div style="display: flex; justify-content: space-around; margin: 25px 0; padding: 20px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee;">
+                    <div><span id="days" style="display:block; font-size:28px; color:var(--gold3)">00</span><small style="font-size:10px; color:#aaa">GÜN</small></div>
+                    <div><span id="hours" style="display:block; font-size:28px; color:var(--gold3)">00</span><small style="font-size:10px; color:#aaa">SAAT</small></div>
+                    <div><span id="mins" style="display:block; font-size:28px; color:var(--gold3)">00</span><small style="font-size:10px; color:#aaa">DAKİKA</small></div>
                 </div>
 
-                <div style="font-size: 18px; letter-spacing: 3px; margin: 20px 0;">11 OCAK 2026</div>
+                <div style="font-size: 20px; letter-spacing: 4px; margin: 20px 0; color: #444;">11 OCAK 2026</div>
 
-                <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 30px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 30px 0; font-size: 13px;">
                     <div><b style="color:var(--gold3)">GELİN AİLESİ</b><br>Mızrakçı Ailesi</div>
                     <div><b style="color:var(--gold3)">DAMAT AİLESİ</b><br>Altundağ Ailesi</div>
                 </div>
 
-                <a href="https://maps.app.goo.gl/xxx" target="_blank" class="btn">KONUMU GÖRÜNTÜLE</a>
+                <a href="https://maps.google.com" target="_blank" class="btn">KONUMU GÖRÜNTÜLE</a>
             </div>
         </div>
     </div>
@@ -137,87 +131,61 @@
     <audio id="bgMusic" loop><source src="stay.mp3" type="audio/mpeg"></audio>
 
     <script>
-        // Yıldız Efekti Scripti
+        // Arka Plan Yıldız Efekti
         const canvas = document.getElementById('stars');
         const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function initStars() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            for(let i=0; i<100; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    size: Math.random() * 2,
-                    speed: Math.random() * 0.5 + 0.2
-                });
-            }
-        }
-
-        function drawStars() {
-            ctx.clearRect(0,0, canvas.width, canvas.height);
-            ctx.fillStyle = "white";
-            particles.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-                ctx.fill();
-                p.y -= p.speed;
-                if(p.y < 0) p.y = canvas.height;
+        let pts = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.onresize = resize; resize();
+        for(let i=0; i<80; i++) pts.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, s:Math.random()*2, v:Math.random()*0.5+0.1});
+        function anim() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = "rgba(255,255,255,0.8)";
+            pts.forEach(p => {
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2); ctx.fill();
+                p.y -= p.v; if(p.y<0) p.y=canvas.height;
             });
-            requestAnimationFrame(drawStars);
+            requestAnimationFrame(anim);
         }
-        initStars(); drawStars();
+        anim();
 
-        // Zarf Kontrolleri
-        const envelope = document.getElementById('envelope');
+        // Zarf ve Sürükleme
+        const env = document.getElementById('envelope');
         const seal = document.getElementById('seal');
         const music = document.getElementById('bgMusic');
-        let rotY = 0, rotX = 0, startX = 0, isDragging = false, isOpen = false;
+        let ry = 0, sx = 0, drag = false, open = false;
 
-        const handleStart = (e) => {
-            if (isOpen) return;
-            isDragging = true;
-            startX = (e.pageX || e.touches[0].pageX);
-            envelope.style.transition = 'none';
+        const start = (e) => { if(open) return; drag = true; sx = (e.pageX || e.touches[0].pageX); env.style.transition = 'none'; };
+        const move = (e) => { 
+            if(!drag) return; 
+            let x = (e.pageX || e.touches[0].pageX); 
+            ry += (x - sx) * 0.7; 
+            env.style.transform = `rotateY(${ry}deg)`; 
+            sx = x; 
         };
+        const end = () => { drag = false; env.style.transition = '0.7s'; ry = Math.round(ry/180)*180; env.style.transform = `rotateY(${ry}deg)`; };
 
-        const handleMove = (e) => {
-            if (!isDragging) return;
-            const x = (e.pageX || e.touches[0].pageX);
-            rotY += (x - startX) * 0.6;
-            envelope.style.transform = `rotateY(${rotY}deg)`;
-            startX = x;
-        };
+        window.addEventListener('mousedown', start); window.addEventListener('mousemove', move); window.addEventListener('mouseup', end);
+        window.addEventListener('touchstart', start); window.addEventListener('touchmove', move); window.addEventListener('touchend', end);
 
-        const handleEnd = () => {
-            isDragging = false;
-            envelope.style.transition = 'transform 0.7s ease';
-            rotY = Math.round(rotY / 180) * 180;
-            envelope.style.transform = `rotateY(${rotY}deg)`;
-        };
-
-        window.addEventListener('mousedown', handleStart);
-        window.addEventListener('mousemove', handleMove);
-        window.addEventListener('mouseup', handleEnd);
-        window.addEventListener('touchstart', handleStart);
-        window.addEventListener('touchmove', handleMove);
-        window.addEventListener('touchend', handleEnd);
-
-        seal.addEventListener('click', (e) => {
-            e.stopPropagation();
-            if(!isOpen && Math.abs(rotY % 360) === 180) {
-                isOpen = true;
-                envelope.classList.add('open');
+        seal.addEventListener('click', () => {
+            if(!open && Math.abs(ry % 360) === 180) {
+                open = true; env.classList.add('open');
                 music.play().catch(() => {});
             }
         });
 
-        function closeEnvelope() {
-            envelope.classList.remove('open');
-            isOpen = false;
-            music.pause();
-        }
+        function closeEnvelope() { env.classList.remove('open'); open = false; music.pause(); }
+
+        // Geri Sayım
+        const target = new Date("Jan 11, 2026 19:00:00").getTime();
+        setInterval(() => {
+            const diff = target - Date.now();
+            if(diff < 0) return;
+            document.getElementById("days").innerText = Math.floor(diff / 86400000);
+            document.getElementById("hours").innerText = Math.floor((diff % 86400000) / 3600000);
+            document.getElementById("mins").innerText = Math.floor((diff % 3600000) / 60000);
+        }, 1000);
     </script>
 </body>
 </html>
