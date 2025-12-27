@@ -184,42 +184,66 @@
         const env = document.getElementById('envelope');
         const seal = document.getElementById('seal');
         const music = document.getElementById('music');
-        let rotY = 0, rotX = 0, startX, startY, isDragging = false;
+
+        // Dönüş Dinamikleri (Atalet ve Süreklilik)
+        let rotY = 0, rotX = 0;
+        let velY = 0, velX = 0;
+        let lastX, lastY;
+        let isDragging = false;
+        let autoRotate = 0.2; // Sürekli hafif dönüş hızı
+
+        const updateRotation = () => {
+            if (!isDragging) {
+                // Atalet: Hız zamanla azalır (sürtünme)
+                velY *= 0.95;
+                velX *= 0.95;
+                
+                // Otomatik yavaş dönüş ekle
+                rotY += velY + autoRotate;
+                rotX += velX;
+            }
+            
+            if (!env.classList.contains('open')) {
+                env.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+            }
+            requestAnimationFrame(updateRotation);
+        };
+        updateRotation();
 
         const onStart = (e) => {
             if (env.classList.contains('open')) return;
             isDragging = true;
-            startX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
-            startY = e.pageY || (e.touches ? e.touches[0].pageY : 0);
-            env.style.transition = 'none';
+            lastX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
+            lastY = e.pageY || (e.touches ? e.touches[0].pageY : 0);
         };
 
         const onMove = (e) => {
             if (!isDragging) return;
             const x = e.pageX || (e.touches ? e.touches[0].pageX : 0);
             const y = e.pageY || (e.touches ? e.touches[0].pageY : 0);
-            rotY += (x - startX) * 0.7;
-            rotX -= (y - startY) * 0.7;
-            env.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-            startX = x; startY = y;
+            
+            velY = (x - lastX) * 0.5;
+            velX = (lastY - y) * 0.5;
+            
+            rotY += velY;
+            rotX += velX;
+            
+            lastX = x; lastY = y;
         };
 
-        const onEnd = () => { isDragging = false; env.style.transition = 'transform 0.5s ease-out'; };
+        const onEnd = () => { isDragging = false; };
 
         window.addEventListener('mousedown', onStart); window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onEnd);
         window.addEventListener('touchstart', onStart); window.addEventListener('touchmove', onMove); window.addEventListener('touchend', onEnd);
 
-        // Zarf Açıldığında Konfeti Fonksiyonu
         function fireConfetti() {
             const count = 200;
             const defaults = { origin: { y: 0.7 }, zIndex: 1000 };
-
             function fire(particleRatio, opts) {
                 confetti(Object.assign({}, defaults, opts, {
                     particleCount: Math.floor(count * particleRatio)
                 }));
             }
-
             fire(0.25, { spread: 26, startVelocity: 55 });
             fire(0.2, { spread: 60 });
             fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
@@ -232,13 +256,18 @@
             const normalizedY = Math.abs(rotY % 360);
             if (normalizedY > 130 && normalizedY < 230) {
                 env.classList.add('open');
-                fireConfetti(); // KONFETİ TETİKLENDİ
+                fireConfetti();
                 music.currentTime = 34;
                 music.play().catch(e => {});
+                velY = 0; velX = 0; autoRotate = 0; // Açılınca hareketi durdur
             }
         });
 
-        function closeEnv() { env.classList.remove('open'); music.pause(); }
+        function closeEnv() { 
+            env.classList.remove('open'); 
+            music.pause(); 
+            autoRotate = 0.2; 
+        }
 
         const target = new Date("Jan 11, 2026 19:00:00").getTime();
         setInterval(() => {
