@@ -30,13 +30,12 @@
 
         .envelope { 
             width: 350px; height: 235px; position: relative; 
-            transform-style: preserve-3d; will-change: transform; cursor: grab;
+            transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); cursor: grab;
         }
 
         .face { 
             position: absolute; inset: 0; backface-visibility: hidden; border-radius: 12px; 
-            box-shadow: 0 50px 120px rgba(0,0,0,0.8); 
-            border: 2px solid #b8962e;
+            box-shadow: 0 50px 120px rgba(0,0,0,0.8); border: 2px solid #b8962e;
         }
 
         .front { 
@@ -54,7 +53,6 @@
         .gold-title { 
             background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             font-family: 'Playfair Display', serif; font-style: italic; font-size: 38px; font-weight: 700; letter-spacing: 2px;
-            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.4));
         }
 
         .back { background: var(--env-color); transform: rotateY(180deg); z-index: 1; overflow: hidden; }
@@ -91,8 +89,8 @@
         .timer { display: flex; justify-content: space-around; margin: 25px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 20px 0; }
         .timer span { display: block; font-size: 30px; color: #b8962e; font-weight: 300; }
 
-        .btn-map { display: block; margin-top: 25px; padding: 18px; background: var(--gold); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 13px; box-shadow: 0 10px 30px rgba(184,150,46,0.4); }
-        .close { position: sticky; top: 15px; left: 85%; width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 101; box-shadow: 0 5px 20px rgba(0,0,0,0.3); color: #999; font-size: 32px; }
+        .btn-map { display: block; margin-top: 25px; padding: 18px; background: var(--gold); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 13px; }
+        .close { position: sticky; top: 15px; left: 85%; width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 101; color: #999; font-size: 32px; }
     </style>
 </head>
 <body>
@@ -102,18 +100,11 @@
     <div class="scene">
         <div class="envelope" id="envelope">
             <div class="face front">
-                <div class="gold-frame">
-                    <div class="corner top-left"></div>
-                    <div class="corner top-right"></div>
-                    <div class="corner bottom-left"></div>
-                    <div class="corner bottom-right"></div>
-                </div>
+                <div class="gold-frame"><div class="corner top-left"></div><div class="corner top-right"></div><div class="corner bottom-left"></div><div class="corner bottom-right"></div></div>
                 <div class="gold-title">Davetlisiniz</div>
             </div>
-            
             <div class="face back">
-                <div class="flap"></div>
-                <div class="pocket-bottom"></div>
+                <div class="flap"></div><div class="pocket-bottom"></div>
                 <div class="seal" id="seal"><span>E&F</span></div>
             </div>
         </div>
@@ -124,21 +115,13 @@
                 <img src="1000023273.jpg" class="couple-img">
                 <h1>Eftal & M. Fatih</h1>
                 <p style="font-style: italic; color: #666; font-size: 15px;">"Bu özel günümüzde siz değerli dostlarımızı aramızda görmeyi dileriz."</p>
-                
                 <div class="timer">
                     <div><span id="d">00</span><small>GÜN</small></div>
                     <div><span id="h">00</span><small>SAAT</small></div>
                     <div><span id="m">00</span><small>DAKİKA</small></div>
                 </div>
-
                 <div style="font-size: 20px; letter-spacing: 5px; margin: 20px 0; font-weight: 300;">11 . 01 . 2026</div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 13px; margin-top: 25px;">
-                    <div><b style="color:#b8962e">MIZRAKÇI AİLESİ</b><br>Dilek & M. Adil</div>
-                    <div><b style="color:#b8962e">ALTUNDAĞ AİLESİ</b><br>Nimet & Mehmet</div>
-                </div>
-
-                <a href="https://maps.google.com" target="_blank" class="btn-map">KONUMU GÖRÜNTÜLE</a>
+                <a href="#" target="_blank" class="btn-map">KONUMU GÖRÜNTÜLE</a>
             </div>
         </div>
     </div>
@@ -151,123 +134,65 @@
         let pts = [];
         function resize() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; }
         window.onresize = resize; resize();
-        
-        for(let i=0; i<150; i++) {
-            pts.push({
-                x: Math.random()*cvs.width, 
-                y: Math.random()*cvs.height, 
-                r: Math.random()*1.5 + 0.5, 
-                v: Math.random()*0.2+0.05,
-                c: Math.random() > 0.4 ? "#f6e27f" : "#d1bcff",
-                op: Math.random()*0.8 + 0.2,
-                blink: Math.random() * 0.05
-            });
-        }
-
-        function draw() {
-            ctx.clearRect(0,0,cvs.width,cvs.height);
-            pts.forEach(p => {
-                ctx.beginPath();
-                ctx.fillStyle = p.c;
-                p.op += p.blink;
-                if(p.op > 1 || p.op < 0.2) p.blink *= -1;
-                ctx.globalAlpha = p.op;
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-                ctx.fill();
-                p.y -= p.v;
-                if(p.y < 0) p.y = cvs.height;
-            });
-            requestAnimationFrame(draw);
-        }
+        for(let i=0; i<150; i++) pts.push({x:Math.random()*cvs.width, y:Math.random()*cvs.height, r:Math.random()*1.5+0.5, v:Math.random()*0.2+0.05, c:Math.random()>0.4?"#f6e27f":"#d1bcff", op:Math.random()*0.8+0.2, blink:Math.random()*0.05});
+        function draw() { ctx.clearRect(0,0,cvs.width,cvs.height); pts.forEach(p=>{ctx.beginPath();ctx.fillStyle=p.c;p.op+=p.blink;if(p.op>1||p.op<0.2)p.blink*=-1;ctx.globalAlpha=p.op;ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();p.y-=p.v;if(p.y<0)p.y=cvs.height;}); requestAnimationFrame(draw);}
         draw();
 
         const env = document.getElementById('envelope');
         const seal = document.getElementById('seal');
         const music = document.getElementById('music');
-
-        // Dönüş Dinamikleri (Atalet ve Süreklilik)
-        let rotY = 0, rotX = 0;
-        let velY = 0, velX = 0;
-        let lastX, lastY;
-        let isDragging = false;
-        let autoRotate = 0.2; // Sürekli hafif dönüş hızı
-
-        const updateRotation = () => {
-            if (!isDragging) {
-                // Atalet: Hız zamanla azalır (sürtünme)
-                velY *= 0.95;
-                velX *= 0.95;
-                
-                // Otomatik yavaş dönüş ekle
-                rotY += velY + autoRotate;
-                rotX += velX;
-            }
-            
-            if (!env.classList.contains('open')) {
-                env.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-            }
-            requestAnimationFrame(updateRotation);
-        };
-        updateRotation();
+        let rotY = 0, rotX = 0, startX, startY, isDragging = false;
 
         const onStart = (e) => {
             if (env.classList.contains('open')) return;
             isDragging = true;
-            lastX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
-            lastY = e.pageY || (e.touches ? e.touches[0].pageY : 0);
+            startX = e.pageX || (e.touches ? e.touches[0].pageX : 0);
+            startY = e.pageY || (e.touches ? e.touches[0].pageY : 0);
+            env.style.transition = 'none';
         };
 
         const onMove = (e) => {
             if (!isDragging) return;
             const x = e.pageX || (e.touches ? e.touches[0].pageX : 0);
             const y = e.pageY || (e.touches ? e.touches[0].pageY : 0);
-            
-            velY = (x - lastX) * 0.5;
-            velX = (lastY - y) * 0.5;
-            
-            rotY += velY;
-            rotX += velX;
-            
-            lastX = x; lastY = y;
+            let deltaY = (x - startX) * 0.5;
+            let deltaX = (startY - y) * 0.5; // Yukarı aşağı hareket
+            env.style.transform = `rotateY(${rotY + deltaY}deg) rotateX(${rotX + deltaX}deg)`;
         };
 
-        const onEnd = () => { isDragging = false; };
+        const onEnd = (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            const x = e.pageX || (e.changedTouches ? e.changedTouches[0].pageX : 0);
+            const y = e.pageY || (e.changedTouches ? e.changedTouches[0].pageY : 0);
+            
+            rotY += (x - startX) * 0.5;
+            rotX = 0; // Yukarı aşağı hareketi bıraktığında düzleşir
+            
+            // Ön veya Arka yüze kilitlenme
+            let normalizedY = Math.abs(rotY % 360);
+            if (normalizedY > 90 && normalizedY < 270) {
+                rotY = (rotY > 0) ? 180 : -180;
+            } else {
+                rotY = 0;
+            }
+            env.style.transition = 'transform 0.6s cubic-bezier(0.23, 1, 0.32, 1)';
+            env.style.transform = `rotateY(${rotY}deg) rotateX(0deg)`;
+        };
 
         window.addEventListener('mousedown', onStart); window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onEnd);
         window.addEventListener('touchstart', onStart); window.addEventListener('touchmove', onMove); window.addEventListener('touchend', onEnd);
 
-        function fireConfetti() {
-            const count = 200;
-            const defaults = { origin: { y: 0.7 }, zIndex: 1000 };
-            function fire(particleRatio, opts) {
-                confetti(Object.assign({}, defaults, opts, {
-                    particleCount: Math.floor(count * particleRatio)
-                }));
-            }
-            fire(0.25, { spread: 26, startVelocity: 55 });
-            fire(0.2, { spread: 60 });
-            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-            fire(0.1, { spread: 120, startVelocity: 45 });
-        }
-
         seal.addEventListener('click', (e) => {
             e.stopPropagation();
-            const normalizedY = Math.abs(rotY % 360);
-            if (normalizedY > 130 && normalizedY < 230) {
+            if (Math.abs(rotY % 360) === 180) {
                 env.classList.add('open');
-                fireConfetti();
-                music.currentTime = 34;
-                music.play().catch(e => {});
-                velY = 0; velX = 0; autoRotate = 0; // Açılınca hareketi durdur
+                confetti({particleCount: 150, spread: 70, origin: { y: 0.6 }});
+                music.play().catch(()=>{});
             }
         });
 
-        function closeEnv() { 
-            env.classList.remove('open'); 
-            music.pause(); 
-            autoRotate = 0.2; 
-        }
+        function closeEnv() { env.classList.remove('open'); music.pause(); }
 
         const target = new Date("Jan 11, 2026 19:00:00").getTime();
         setInterval(() => {
