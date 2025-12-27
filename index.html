@@ -10,10 +10,18 @@
             --gold: linear-gradient(135deg, #b8962e 0%, #f6e27f 50%, #b8962e 100%);
             --env-color: #cfc6e8;
             --env-dark: #b7aed9;
+            /* Yeni Açık Renk Teması */
+            --bg-grad: radial-gradient(circle at center, #ffffff 0%, #f4f1ea 100%);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { min-height: 100vh; background: radial-gradient(circle at center, #1a0f2e 0%, #000 100%); overflow: hidden; font-family: 'Montserrat', sans-serif; touch-action: none; }
+        body { 
+            min-height: 100vh; 
+            background: var(--bg-grad); 
+            overflow: hidden; 
+            font-family: 'Montserrat', sans-serif; 
+            touch-action: none; 
+        }
 
         #bgCanvas { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
 
@@ -28,18 +36,16 @@
 
         .face { 
             position: absolute; inset: 0; backface-visibility: hidden; border-radius: 12px; 
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6); border: 2px solid #b8962e;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15); border: 2px solid #b8962e;
         }
 
-        /* ÖN YÜZ: ZENGİN ALTIN VARAKLAR */
+        /* ÖN YÜZ */
         .front { 
             background: var(--env-color); z-index: 2; transform: rotateY(0deg); 
             display: flex; justify-content: center; align-items: center;
         }
         
-        .gold-frame {
-            position: absolute; inset: 8px; border: 1px solid #f6e27f; border-radius: 8px;
-        }
+        .gold-frame { position: absolute; inset: 8px; border: 1px solid #f6e27f; border-radius: 8px; }
         .corner { position: absolute; width: 40px; height: 40px; border: 4px solid transparent; }
         .top-left { top: -4px; left: -4px; border-top-color: #f6e27f; border-left-color: #f6e27f; border-radius: 8px 0 0 0; }
         .top-right { top: -4px; right: -4px; border-top-color: #f6e27f; border-right-color: #f6e27f; border-radius: 0 8px 0 0; }
@@ -49,6 +55,7 @@
         .gold-title { 
             background: var(--gold); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             font-family: 'Playfair Display', serif; font-style: italic; font-size: 38px; font-weight: 700; letter-spacing: 2px;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
         }
 
         /* ARKA YÜZ */
@@ -61,7 +68,7 @@
         .seal { 
             position: absolute; top: 52%; left: 50%; width: 80px; height: 80px; transform: translate(-50%, -50%); 
             background: var(--gold); border-radius: 50%; z-index: 9; display: flex; justify-content: center; align-items: center; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3); cursor: pointer;
         }
         .seal span { font-family: 'Great Vibes', cursive; color: #4b3a0a; font-size: 26px; font-weight: bold; }
 
@@ -72,7 +79,7 @@
             background: #fff; border-radius: 30px 30px 0 0;
             z-index: 100; overflow-y: auto; 
             transition: top 1.2s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s;
-            opacity: 0; box-shadow: 0 -30px 100px rgba(0,0,0,0.9);
+            opacity: 0; box-shadow: 0 -20px 60px rgba(0,0,0,0.2);
         }
 
         .envelope.open .flap { transform: rotateX(180deg); z-index: 1; }
@@ -80,14 +87,14 @@
         .envelope.open + .card { opacity: 1; top: 10vh; }
 
         .card-inner { padding: 40px 20px; text-align: center; }
-        .couple-img { width: 150px; height: 150px; border-radius: 50%; border: 4px solid #b8962e; padding: 5px; margin-bottom: 15px; object-fit: cover; }
+        .couple-img { width: 160px; height: 160px; border-radius: 50%; border: 4px solid #b8962e; padding: 5px; margin-bottom: 15px; object-fit: cover; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         .card-inner h1 { font-family: 'Great Vibes', cursive; font-size: 44px; color: #b8962e; margin: 10px 0; }
         
-        .timer { display: flex; justify-content: space-around; margin: 20px 0; border-y: 1px solid #eee; padding: 15px 0; }
+        .timer { display: flex; justify-content: space-around; margin: 20px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 15px 0; }
         .timer span { display: block; font-size: 28px; color: #b8962e; }
 
-        .btn-map { display: block; margin-top: 20px; padding: 18px; background: var(--gold); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 12px; }
-        .close { position: sticky; top: 15px; left: 85%; width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 101; box-shadow: 0 5px 20px rgba(0,0,0,0.2); color: #999; font-size: 28px; }
+        .btn-map { display: block; margin-top: 20px; padding: 18px; background: var(--gold); color: #fff; text-decoration: none; border-radius: 50px; font-weight: bold; font-size: 12px; box-shadow: 0 10px 20px rgba(184,150,46,0.2); }
+        .close { position: sticky; top: 15px; left: 85%; width: 45px; height: 45px; background: #fff; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; z-index: 101; box-shadow: 0 5px 15px rgba(0,0,0,0.1); color: #ccc; font-size: 28px; }
     </style>
 </head>
 <body>
@@ -118,7 +125,7 @@
             <div class="card-inner">
                 <img src="1000023273.jpg" class="couple-img">
                 <h1>Eftal & M. Fatih</h1>
-                <p style="font-style: italic; color: #666;">Bu mutlu günümüzde sizleri de aramızda görmekten onur duyarız.</p>
+                <p style="font-style: italic; color: #666; line-height: 1.6;">Bu mutlu günümüzde sizleri de aramızda görmekten onur duyarız.</p>
                 
                 <div class="timer">
                     <div><span id="d">00</span><small>GÜN</small></div>
@@ -146,23 +153,20 @@
         let pts = [];
         function resize() { cvs.width = window.innerWidth; cvs.height = window.innerHeight; }
         window.onresize = resize; resize();
-        for(let i=0; i<70; i++) pts.push({x:Math.random()*cvs.width, y:Math.random()*cvs.height, r:Math.random()*1.5, v:Math.random()*0.4+0.1});
+        // Altın renkli parıltılar
+        for(let i=0; i<70; i++) pts.push({x:Math.random()*cvs.width, y:Math.random()*cvs.height, r:Math.random()*1.8, v:Math.random()*0.3+0.1, c: Math.random() > 0.5 ? "#b8962e" : "#d1d1d1"});
         function draw() {
-            ctx.clearRect(0,0,cvs.width,cvs.height); ctx.fillStyle="white";
-            pts.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y-=p.v; if(p.y<0) p.y=cvs.height; });
+            ctx.clearRect(0,0,cvs.width,cvs.height);
+            pts.forEach(p => { ctx.beginPath(); ctx.fillStyle = p.c; ctx.globalAlpha = 0.4; ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill(); p.y-=p.v; if(p.y<0) p.y=cvs.height; });
             requestAnimationFrame(draw);
         }
         draw();
 
-        // 3D KÜRESEL DÖNÜŞ (YUKARI-AŞAĞI & SAĞA-SOLA)
+        // 3D KÜRESEL DÖNÜŞ
         const env = document.getElementById('envelope');
         const seal = document.getElementById('seal');
         const music = document.getElementById('music');
-        
-        let rotY = 0;
-        let rotX = 0;
-        let startX, startY;
-        let isDragging = false;
+        let rotY = 0, rotX = 0, startX, startY, isDragging = false;
 
         const onStart = (e) => {
             if (env.classList.contains('open')) return;
@@ -176,30 +180,16 @@
             if (!isDragging) return;
             const x = e.pageX || e.touches[0].pageX;
             const y = e.pageY || e.touches[0].pageY;
-            
             rotY += (x - startX) * 0.6;
-            rotX -= (y - startY) * 0.6; // Yukarı-Aşağı için
-
-            // Yukarı aşağı dönüşü çok aşırıya kaçmaması için hafif kısıtlayabiliriz (-90 ile 90 gibi)
-            // rotX = Math.max(-90, Math.min(90, rotX)); 
-
+            rotX -= (y - startY) * 0.6;
             env.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-            
-            startX = x;
-            startY = y;
+            startX = x; startY = y;
         };
 
-        const onEnd = () => {
-            isDragging = false;
-            env.style.transition = 'transform 0.5s ease-out';
-        };
+        const onEnd = () => { isDragging = false; env.style.transition = 'transform 0.5s ease-out'; };
 
-        window.addEventListener('mousedown', onStart);
-        window.addEventListener('mousemove', onMove);
-        window.addEventListener('mouseup', onEnd);
-        window.addEventListener('touchstart', onStart);
-        window.addEventListener('touchmove', onMove);
-        window.addEventListener('touchend', onEnd);
+        window.addEventListener('mousedown', onStart); window.addEventListener('mousemove', onMove); window.addEventListener('mouseup', onEnd);
+        window.addEventListener('touchstart', onStart); window.addEventListener('touchmove', onMove); window.addEventListener('touchend', onEnd);
 
         seal.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -223,5 +213,4 @@
         }, 1000);
     </script>
 </body>
-        </html>
-        
+</html>
