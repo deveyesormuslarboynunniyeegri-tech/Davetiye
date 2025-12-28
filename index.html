@@ -3,124 +3,236 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Premium Davetiye</title>
+<title>Eftal & M. Fatih - Davetiye</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&family=Great+Vibes&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
 <style>
 :root{
-  --gold:#f6e27f;
-  --bg:radial-gradient(circle,#42184d,#120314);
+--gold:#f6e27f;
+--env:#c0adeb;
+--env-dark:#a289d6;
+--bg:radial-gradient(circle,#42184d,#120314);
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
 body{
-  background:var(--bg);
-  height:100vh;
-  overflow:hidden;
-  font-family:Montserrat,sans-serif;
+background:var(--bg);
+height:100vh;
+overflow:hidden;
+font-family:Montserrat,sans-serif;
 }
 
-/* ================= KUŞ ================= */
+/* ================= BACKGROUND SPARKLE ================= */
+#bgCanvas{
+position:fixed;
+inset:0;
+z-index:1;
+pointer-events:none;
+}
+
+/* ================= ENVELOPE ================= */
+.scene{
+position:relative;
+width:100%;
+height:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:5;
+perspective:2000px;
+}
+
+.envelope{
+width:340px;
+height:230px;
+position:relative;
+transform-style:preserve-3d;
+transition:transform .8s;
+}
+
+.face{
+position:absolute;
+inset:0;
+border-radius:12px;
+background:var(--env);
+border:2px solid var(--gold);
+backface-visibility:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.front{
+font-size:36px;
+color:var(--gold);
+font-family:Great Vibes,cursive;
+}
+
+.back{
+transform:rotateY(180deg);
+}
+
+.flap{
+position:absolute;
+top:0;
+width:100%;
+height:100%;
+background:var(--env-dark);
+clip-path:polygon(0 0,50% 60%,100% 0);
+transform-origin:top;
+transition:.8s;
+}
+
+.seal{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:70px;
+height:70px;
+border-radius:50%;
+background:var(--gold);
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:28px;
+cursor:pointer;
+z-index:10;
+}
+
+.envelope.open .flap{
+transform:rotateX(180deg);
+}
+
+.card{
+position:fixed;
+bottom:-100%;
+left:50%;
+transform:translateX(-50%);
+width:90%;
+max-width:420px;
+height:80%;
+background:#fff;
+border-radius:30px 30px 0 0;
+z-index:20;
+transition:1s;
+padding:30px;
+text-align:center;
+overflow:auto;
+}
+
+.envelope.open + .card{
+bottom:0;
+}
+
+/* ================= BIRD ================= */
 .bird-scene{
-  position:fixed;
-  top:20%;
-  left:-300px;
-  z-index:90;
-  pointer-events:none;
-  animation:birdFly 16s ease-in-out forwards;
+position:fixed;
+top:22%;
+left:-300px;
+z-index:15;
+pointer-events:none;
+animation:birdFly 16s ease-in-out forwards;
 }
 
 .bird{
-  width:220px;
-  animation:float 2s ease-in-out infinite;
-}
-
-.wing{
-  transform-origin:50% 50%;
-  animation:flap 0.8s ease-in-out infinite;
-}
-
-/* ALTIN TOZ */
-.trail{
-  position:absolute;
-  width:6px;
-  height:6px;
-  background:var(--gold);
-  border-radius:50%;
-  filter:blur(1px);
-  animation:fade 1.2s linear forwards;
-}
-
-@keyframes fade{
-  to{opacity:0;transform:scale(2)}
-}
-
-/* UÇUŞ */
-@keyframes birdFly{
-  0%{transform:translateX(0);opacity:0}
-  10%{opacity:1}
-  50%{transform:translateX(55vw)}
-  60%{transform:translateX(55vw)}
-  100%{transform:translateX(140vw) translateY(-120px);opacity:0}
+width:220px;
+animation:flap 1.2s infinite;
+filter:drop-shadow(0 0 12px rgba(246,226,127,.6));
 }
 
 @keyframes flap{
-  0%{transform:rotate(0deg)}
-  50%{transform:rotate(12deg)}
-  100%{transform:rotate(0deg)}
+0%{transform:translateY(0)}
+50%{transform:translateY(-8px)}
+100%{transform:translateY(0)}
 }
 
-@keyframes float{
-  50%{transform:translateY(-10px)}
+@keyframes birdFly{
+0%{transform:translateX(-300px);opacity:0}
+10%{opacity:1}
+50%{transform:translateX(50vw)}
+60%{transform:translateX(50vw)}
+100%{transform:translateX(120vw);opacity:0}
 }
 
-/* BIRAKILAN ZARF */
-.drop-envelope{
-  position:fixed;
-  top:36%;
-  left:50%;
-  width:42px;
-  height:28px;
-  border:2px solid var(--gold);
-  transform:translateX(-50%) scale(0);
-  transition:.6s;
-  z-index:40;
-  box-shadow:0 0 15px rgba(246,226,127,.8);
+/* ================= GOLD DUST ================= */
+.dust{
+position:absolute;
+width:6px;
+height:6px;
+background:var(--gold);
+border-radius:50%;
+opacity:.8;
+animation:dust 2s linear forwards;
+}
+
+@keyframes dust{
+to{
+transform:translateX(-80px) translateY(40px);
+opacity:0;
+}
 }
 </style>
 </head>
 
 <body>
 
-<!-- KUŞ -->
-<div class="bird-scene" id="bird">
-<svg class="bird" viewBox="0 0 300 150">
-  <path class="wing" d="M40 80 Q120 10 200 70" fill="none" stroke="#f6e27f" stroke-width="4"/>
-  <path class="wing" d="M40 80 Q120 150 220 90" fill="none" stroke="#f6e27f" stroke-width="4"/>
-  <path d="M200 70 L240 60" stroke="#f6e27f" stroke-width="3"/>
-  <rect x="235" y="60" width="28" height="18" fill="none" stroke="#f6e27f" stroke-width="2"/>
-</svg>
+<canvas id="bgCanvas"></canvas>
+
+<!-- BIRD -->
+<div class="bird-scene">
+<img src="https://i.imgur.com/3cXQK4N.png" class="bird">
 </div>
 
-<div class="drop-envelope" id="dropEnv"></div>
+<div class="scene">
+<div class="envelope" id="env">
+<div class="face front">Davetlisiniz</div>
+<div class="face back">
+<div class="flap"></div>
+<div class="seal" id="seal">❤</div>
+</div>
+</div>
+
+<div class="card">
+<h2>Eftal & M. Fatih</h2>
+<p>11.01.2026 – 19:00</p>
+</div>
+</div>
+
+<audio id="music" src="stay.mp3"></audio>
 
 <script>
-/* ALTIN TOZ */
-const bird=document.getElementById("bird");
-setInterval(()=>{
-  const d=document.createElement("div");
-  d.className="trail";
-  d.style.left=Math.random()*40+"px";
-  d.style.top=Math.random()*40+"px";
-  bird.appendChild(d);
-  setTimeout(()=>d.remove(),1200);
-},120);
+/* BACKGROUND */
+const c=document.getElementById("bgCanvas"),x=c.getContext("2d");
+function r(){c.width=innerWidth;c.height=innerHeight}
+r();onresize=r;
+let s=[...Array(120)].map(()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*2}));
+(function d(){
+x.clearRect(0,0,c.width,c.height);
+s.forEach(p=>{x.beginPath();x.fillStyle="#f6e27f";x.arc(p.x,p.y,p.r,0,6.28);x.fill();p.y-=.3;if(p.y<0)p.y=c.height});
+requestAnimationFrame(d);
+})();
 
-/* ZARFI BIRAK */
-setTimeout(()=>{
- document.getElementById("dropEnv").style.transform="translateX(-50%) scale(1)";
-},8500);
+/* BIRD DUST */
+const bird=document.querySelector(".bird-scene");
+setInterval(()=>{
+const d=document.createElement("div");
+d.className="dust";
+d.style.left="180px";
+d.style.top="80px";
+bird.appendChild(d);
+setTimeout(()=>d.remove(),2000);
+},300);
+
+/* ENVELOPE */
+const env=document.getElementById("env");
+document.getElementById("seal").onclick=()=>{
+env.classList.add("open");
+confetti({particleCount:120,spread:70});
+document.getElementById("music").play();
+};
 </script>
 
 </body>
