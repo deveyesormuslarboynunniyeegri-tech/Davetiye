@@ -79,7 +79,6 @@
         .card-inner { padding: 45px 25px; text-align: center; }
         .couple-img { width: 130px; height: 130px; border-radius: 50%; border: 3px solid #b8962e; padding: 5px; margin-bottom: 15px; object-fit: cover; }
         
-        /* İsim Boşluğu Düzenlemesi */
         .names { font-family: 'Great Vibes', cursive; font-size: 42px; color: #b8962e; margin: 15px 0; }
         .ampersand { margin: 0 25px; font-size: 35px; opacity: 0.8; }
 
@@ -146,7 +145,6 @@
     <audio id="music" loop><source src="stay.mp3" type="audio/mpeg"></audio>
 
     <script>
-        // Arka plan simleri
         const cvs = document.getElementById('bgCanvas');
         const ctx = cvs.getContext('2d');
         let pts = [];
@@ -156,7 +154,6 @@
         function draw() { ctx.clearRect(0,0,cvs.width,cvs.height); pts.forEach(p=>{ctx.beginPath();ctx.fillStyle=p.c;p.op+=p.blink;if(p.op>1||p.op<0.2)p.blink*=-1;ctx.globalAlpha=p.op;ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();p.y-=p.v;if(p.y<0)p.y=cvs.height;}); requestAnimationFrame(draw);}
         draw();
 
-        // Dönme Mekaniği
         const env = document.getElementById('envelope');
         const seal = document.getElementById('seal');
         const music = document.getElementById('music');
@@ -203,8 +200,12 @@
                 env.classList.add('open');
                 isOpen = true;
                 confetti({particleCount: 150, spread: 70, origin: { y: 0.6 }});
-                music.currentTime = 34;
-                music.play().catch(() => {});
+                
+                // Müzik Başlangıcını 1 Saniye Geciktir
+                setTimeout(() => {
+                    music.currentTime = 34;
+                    music.play().catch(() => {});
+                }, 1000); 
             }
         });
 
