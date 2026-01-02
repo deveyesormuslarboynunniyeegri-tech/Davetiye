@@ -61,7 +61,13 @@
             background: var(--gold); border-radius: 50%; z-index: 9; display: flex; justify-content: center; align-items: center; 
             box-shadow: 0 10px 40px rgba(0,0,0,0.6); cursor: pointer;
         }
-        .seal span { font-family: 'Great Vibes', cursive; color: #4b3a0a; font-size: 28px; font-weight: bold; }
+        .seal span { 
+            font-family: 'Playfair Display', serif; 
+            color: #4b3a0a; 
+            font-size: 24px; 
+            font-weight: bold; 
+            letter-spacing: 1px;
+        }
 
         .card {
             position: fixed; top: 120%; left: 50%; transform: translateX(-50%);
@@ -79,7 +85,6 @@
         .card-inner { padding: 45px 25px; text-align: center; }
         .couple-img { width: 130px; height: 130px; border-radius: 50%; border: 3px solid #b8962e; padding: 5px; margin-bottom: 15px; object-fit: cover; }
         
-        /* İsim ve Boşluk Düzenlemesi */
         .names { font-family: 'Great Vibes', cursive; font-size: 42px; color: #b8962e; margin: 10px 0; }
         .ampersand { margin: 0 8px; font-size: 32px; opacity: 0.8; }
 
@@ -113,14 +118,14 @@
             <div class="face back">
                 <div class="flap"></div>
                 <div class="pocket-bottom"></div>
-                <div class="seal" id="seal"><span>❤</span></div>
+                <div class="seal" id="seal"><span>E&F</span></div>
             </div>
         </div>
 
         <div class="card" id="card">
             <div class="close" onclick="closeEnv()">×</div>
             <div class="card-inner">
-                <img src="1000023273.jpg" class="couple-img">
+                <img src="1000023273.jpg" class="couple-img" alt="Eftal & Fatih">
                 
                 <div class="names">
                     Eftal<span class="ampersand">&</span>M. Fatih
@@ -145,7 +150,7 @@
 
                 <p style="font-size:13px; color:#666;">Saat: 19:00</p>
                 
-                <a href="https://www.google.com/maps?q=37.163105,38.821438" target="_blank" class="btn-map">KONUMU GÖRÜNTÜLE</a>
+                <a href="https://maps.google.com" target="_blank" class="btn-map">KONUMU GÖRÜNTÜLE</a>
             </div>
         </div>
     </div>
